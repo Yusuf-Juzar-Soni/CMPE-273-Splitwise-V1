@@ -10,6 +10,7 @@ import LeftNavBar from "../LeftNavBar/LeftNavBar";
 
 const Dashboard = function () {
   const isLogged = useSelector((state) => state.isLogged.username);
+  console.log("hello")
   return (
     <div className="dashboard">
       <Navbar bg="success" expand="lg">

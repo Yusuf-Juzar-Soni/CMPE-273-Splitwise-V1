@@ -80,9 +80,8 @@ app.post("/login", function (req, res) {
           };
           user = { username: req.body.email, password: req.body.password };
           req.session.user = user;
-          console.log(result)
+          console.log(result);
           res.status(200).json({ result });
-
 
           res.end("Successful Login");
         } else if (result.length === 0) {
@@ -93,17 +92,32 @@ app.post("/login", function (req, res) {
   );
 });
 
-app.post('/dashboard',(req,res)=>{
-  let {email} =req.body
-  con.query("SELECT group_name FROM user_group WHERE user_email=?",[email],function(err,result){
-    let groups=[];
-    for(let i=0;i<result.length;i++){
-      groups.push(result[i].group_name)
-    }
+app.post("/dashboard", (req, res) => {
+  let { email } = req.body;
+  con.query(
+    "SELECT group_name FROM user_group WHERE user_email=?",
+    [email],
+    function (err, result) {
+      let groups = [];
+      for (let i = 0; i < result.length; i++) {
+        groups.push(result[i].group_name);
+      }
 
-    res.status(200).json(groups)
-  })
+      res.status(200).json(groups);
+    }
+  );
 });
+
+app.get("/allUsers", (req, res) => {
+  con.query("SELECT user_email, username from users", (err, result) => {
+    if (!err) {
+      res.status(200).send(result);
+    } else {
+      res.status(400).json({ error: "an error occured" });
+    }
+  });
+});
+
 // app.get("/mygroups", function (req, res) {
 //   const useremail = req.body.email;
 //   const getGroupQuery =

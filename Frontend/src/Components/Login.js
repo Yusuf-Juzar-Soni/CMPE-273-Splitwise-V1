@@ -21,6 +21,13 @@ function Login() {
     history.push("/dash");
   };
 
+  const handleClick = (emailId) => {
+    history.push({
+      pathname: "/dash",
+      search: `?email=${emailId}`,
+    });
+  };
+
   const onLogin = (e) => {
     e.preventDefault();
     console.log("inside function");
@@ -34,6 +41,7 @@ function Login() {
         console.log(response.data.result[0].username);
         console.log(response.data.result[0].user_email);
         loadSuccessful();
+        handleClick(response.data.result[0].user_email);
         dispatch(
           logged(
             response.data.result[0].username,
