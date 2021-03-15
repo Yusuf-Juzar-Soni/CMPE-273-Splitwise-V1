@@ -38,10 +38,10 @@ function LeftNavBar() {
       });
   }
 
-  function redirectToGroup(redirectGroup) {
+  function redirectToGroup(redirectGroup, emailId) {
     history.push({
-      pathname: "/creategroup",
-      search: "?groupname=" + redirectGroup,
+      pathname: "/groupsdisplay",
+      search: `?groupname=` + redirectGroup + `&email=` + emailId,
     });
   }
 
@@ -78,7 +78,9 @@ function LeftNavBar() {
                 value={item}
                 key={item}
                 variant="link"
-                onClick={(event) => redirectToGroup(event.currentTarget.value)}
+                onClick={(event) =>
+                  redirectToGroup(event.currentTarget.value, parsed.email)
+                }
               >
                 {item}
               </Button>

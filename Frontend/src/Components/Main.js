@@ -5,6 +5,7 @@ import signup from './Signup';
 import landing from './Landing/Landing';
 import dashboard from './Dashboard/Dashboard';
 import creategroup from './CreateGroup';
+import groupsdisplay from './DisplayGroup';
 
 
 const Main = function () {
@@ -16,6 +17,7 @@ const Main = function () {
       <Route exact path="/landing" component={landing} />
       <Route exact path="/dash" component={dashboard} />
       <Route exact path="/creategroup" component={creategroup} />
+      <Route exact path="/groupsdisplay" component={groupsdisplay} />
       
       
     </div>

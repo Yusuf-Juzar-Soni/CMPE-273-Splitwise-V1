@@ -26,7 +26,8 @@ function CreateGroup() {
   const [emailId, setEmail] = useState([email.email]);
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/allUsers")
+    console.log(email.email);
+    Axios.get("http://localhost:3001/allUsers/" + email.email)
       .then((response) => {
         console.log(response);
         let data = [];
