@@ -59,8 +59,14 @@ function LeftNavBar() {
     });
   }
 
+  function redirectToActivity(emailId) {
+    history.push({
+      pathname: "/activitydisplay",
+      search: `?email=${emailId}`,
+    });
+  }
+
   useEffect(() => {
-    // const parsed = queryString.parse(location.search);
     retriveGroups(parsed.email);
   }, [location]);
 
@@ -70,6 +76,9 @@ function LeftNavBar() {
         <Nav defaultActiveKey="/home" className="flex-column">
           <Nav.Link onClick={(event) => redirectToDashboard(parsed.email)}>
             Dashboard
+          </Nav.Link>
+          <Nav.Link onClick={(event) => redirectToActivity(parsed.email)}>
+            Activity
           </Nav.Link>
           <Nav.Link>Groups</Nav.Link>
           <ListGroup>

@@ -10,6 +10,7 @@ import Select from "react-select";
 import { useHistory } from "react-router-dom";
 const queryString = require("query-string");
 import Axios from "axios";
+import TopNavBar from "./TopNavBar";
 
 function CreateGroup() {
   const isLogged = useSelector((state) => state.isLogged.username);
@@ -84,25 +85,9 @@ function CreateGroup() {
   return (
     <div>
       <div className="creategroup">
-        <Navbar bg="success" expand="lg">
-          <Navbar.Brand href="#home">
-            <img src={bg_image0} width="50" height="50"></img>
-          </Navbar.Brand>
-          <Nav className="mr-auto">
-            <Nav.Link href="#home" />
-          </Nav>
-          <Dropdown>
-            <Dropdown.Toggle variant="info" id="dropdown-basic">
-              {isLogged}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item href="/landing">Logout</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Navbar>
-        {/* <NavDropdown variant="info" title={isLogged} id="basic-nav-dropdown">
-          <NavDropdown.Item href="/landing">Logout</NavDropdown.Item>
-        </NavDropdown> */}
+        <div>
+          <TopNavBar />
+        </div>
         <div className="row">
           <div div className="col-md-4">
             <LeftNavBar />

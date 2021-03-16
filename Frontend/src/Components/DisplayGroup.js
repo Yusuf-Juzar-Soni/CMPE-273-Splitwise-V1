@@ -9,6 +9,7 @@ import Select from "react-select";
 import { useHistory, useLocation } from "react-router-dom";
 const queryString = require("query-string");
 import Axios from "axios";
+import TopNavBar from "./TopNavBar";
 import {
   Nav,
   Row,
@@ -61,11 +62,11 @@ function DisplayGroup() {
       .then((response) => {
         // eslint-disable-next-line no-console
         console.log(response.data);
-        // fetchBills(group).then((result) => {
-        //   console.log(result);
-        //   setBills([]);
-        //   setBills(result);
-        // });
+        fetchBills(group).then((result) => {
+          console.log(result);
+          setBills([]);
+          setBills(result);
+        });
         setShow(false);
       })
       .catch((e) => {
@@ -73,19 +74,19 @@ function DisplayGroup() {
       });
   };
 
-  // function fetchBills(group) {
-  //   return new Promise((resolve, reject) => {
-  //     Axios.get("http://localhost:3001/fetchBills/" + group)
-  //       .then((response) => {
-  //         // eslint-disable-next-line no-console
-  //         console.log(response.data);
-  //         resolve(response.data);
-  //       })
-  //       .catch((e) => {
-  //         console.log(e);
-  //       });
-  //   });
-  // }
+  function fetchBills(group) {
+    return new Promise((resolve, reject) => {
+      Axios.get("http://localhost:3001/fetchBills/" + group)
+        .then((response) => {
+          // eslint-disable-next-line no-console
+          console.log(response.data);
+          resolve(response.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    });
+  }
 
   const handleShow = () => setShow(true);
 
@@ -109,40 +110,20 @@ function DisplayGroup() {
       });
     console.log(member_names);
 
-    // fetchBills(groupName).then((result) => {
-    //   console.log(result);
-    //   setBills([]);
-    //   setBills(result);
-    // });
+    fetchBills(groupName).then((result) => {
+      console.log(result);
+      setBills([]);
+      setBills(result);
+    });
   }, [location]);
 
   return (
     <div>
       <div className="displaygroup">
-        <Navbar bg="success" expand="lg">
-          <Navbar.Brand href="#home">
-            <img src={bg_image0} width="50" height="50"></img>
-          </Navbar.Brand>
-          <Nav className="mr-auto">
-            <Nav.Link href="#home" />
-          </Nav>
-          <Dropdown>
-            <Dropdown.Toggle variant="info" id="dropdown-basic">
-              {user_name}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item href="/landing">Logout</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Navbar>
-        {/* <NavDropdown variant="info" title={isLogged} id="basic-nav-dropdown">
-          <NavDropdown.Item href="/landing">Logout</NavDropdown.Item>
-        </NavDropdown> */}
-        {/* <div className="row">
-          <center>
-            <h1>Groups Page {groupName}</h1>
-          </center>
-        </div> */}
+        <div>
+          <TopNavBar />
+        </div>
+
         <div className="row">
           <Card
             bg="light"
@@ -213,10 +194,14 @@ function DisplayGroup() {
           <ListGroup>
             {bills.map((bill) => (
               <ListGroup.Item
-                key={bill.amount}
+                // key={bill.amount}
                 className="links-dashboard-groups"
               >
-                amt:{bill.amount}
+                Created By: {bill.created_by} <br></br>
+                Bill Amount: {bill.bill_amount}
+                <br></br>
+                Created On: {bill.bill_timestamp}
+                <br></br>
               </ListGroup.Item>
             ))}
           </ListGroup>

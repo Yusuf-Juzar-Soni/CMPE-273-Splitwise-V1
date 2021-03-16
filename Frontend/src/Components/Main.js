@@ -1,12 +1,13 @@
-import { React } from 'react';
-import { Route } from 'react-router-dom';
-import login from './Login';
-import signup from './Signup';
-import landing from './Landing/Landing';
-import dashboard from './Dashboard/Dashboard';
-import creategroup from './CreateGroup';
-import groupsdisplay from './DisplayGroup';
-
+import { React } from "react";
+import { Route } from "react-router-dom";
+import login from "./Login";
+import signup from "./Signup";
+import landing from "./Landing/Landing";
+import dashboard from "./Dashboard/Dashboard";
+import creategroup from "./CreateGroup";
+import groupsdisplay from "./DisplayGroup";
+import activitydisplay from "./Activity";
+import profile from "./Profile";
 
 const Main = function () {
   return (
@@ -18,8 +19,8 @@ const Main = function () {
       <Route exact path="/dash" component={dashboard} />
       <Route exact path="/creategroup" component={creategroup} />
       <Route exact path="/groupsdisplay" component={groupsdisplay} />
-      
-      
+      <Route exact path="/activitydisplay" component={activitydisplay} />
+      <Route exact path="/profile" component={profile} />
     </div>
   );
 };

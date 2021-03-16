@@ -4,7 +4,7 @@ const cors = require("cors");
 const mysql = require("mysql");
 const PORT = 3001;
 const session = require("express-session");
-//const groupWorkerFunc = require("./groupWorkers");
+const groupWorkerFunc = require("./groupWorkers");
 const billWorkerFunc = require("./billWorker");
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
@@ -204,81 +204,126 @@ app.post("/addBill", function (req, res) {
   res.status(200).json({ message: " successfully added in both" });
 });
 
-// app.post("/createGroup", (req, res) => {
-//   console.log(req.body.members);
-//   console.log(req.body.groupName);
-
-//   groupWorkerFunc
-//     .createGroup(req.body.groupName, req.body.members, req.body.user)
-//     .then((result) => {
-//       if (result == true) {
-//         res.status(200).json({ messgae: "successful" });
-//       } else {
-//         if (result.code === "ER_DUP_ENTRY") {
-//           res.status(409).json({ message: "failure" });
-//         } else {
-//           res.status(400).json({ message: "failure" });
-//         }
-//       }
-//     });
-//});
-
-app.post("/createGroup", function (req, res) {
-  console.log(req.body);
+app.post("/createGroup", (req, res) => {
   console.log(req.body.members);
   console.log(req.body.groupName);
-  const groupName = req.body.groupName;
-  const members = req.body.members;
-  const user = req.body.user;
 
-  console.log(groupName);
-  console.log(members);
-  console.log(user);
-
-  con.query(
-    "insert into splitwise_db.groups (group_name) values (?)",
-    [groupName],
-    (err, result) => {
-      if (err) {
-        if (err.code === "ER_DUP_ENTRY") {
-          console.log("Group already present!!");
-          //res.status(409).json({ message: "Group already exists!" });
-        }
+  groupWorkerFunc
+    .createGroup(req.body.groupName, req.body.members, req.body.user)
+    .then((result) => {
+      if (result == true) {
+        res.status(200).json({ messgae: "successful" });
       } else {
-        //res.status(200).json({ message: "Group Addition successful" });
-      }
-    }
-  );
-
-  con.query(
-    "insert into user_group (user_email, group_name) values (?, ?)",
-    [user, groupName],
-    (err, result) => {
-      if (err) {
-        console.log("Some Error1");
-        //res.status(409).json({ message: "Some error Dumbass" });
-      } else {
-        // res.status(200).json({ message: "User successfully added" });
-      }
-    }
-  );
-
-  for (member of members) {
-    con.query(
-      "insert into user_group (user_email, group_name) values (?, ?)",
-      [member, groupName],
-      (err, result) => {
-        if (err) {
-          console.log("Some Error2");
-          //res.status(409).json({ message: "Some error Dumbass" });
+        if (result.code === "ER_DUP_ENTRY") {
+          res.status(409).json({ message: "failure" });
         } else {
-          //res.status(200).json({ message: "Member successfully added" });
+          res.status(400).json({ message: "failure" });
         }
       }
-    );
-  }
-  res.status(200).json({ message: "Member and Group successfully added" });
+    });
 });
+
+app.get("/fetchBills/:group", (req, res) => {
+  con.query(
+    "select created_by, bill_amount, bill_timestamp from bill_table where bill_group = ?",
+    [req.params.group],
+    (err, result) => {
+      if (!err) {
+        res.status(200).send(result);
+      } else {
+        res.status(400).json({ error: "an error occured" });
+      }
+    }
+  );
+});
+
+app.get("/Activity/:email", (req, res) => {
+  con.query(
+    "SELECT * from bill_table where bill_group IN(select group_name from user_group where user_email = ?)",
+    [req.params.email],
+    (err, result) => {
+      if (!err) {
+        console.log(result);
+        res.status(200).send(result);
+      } else {
+        res.status(400).json({ error: "an error occured" });
+      }
+    }
+  );
+});
+
+app.post("/userdetails", (req, res) => {
+  con.query(
+    "SELECT * from users where user_email = ?",
+    [req.body.email],
+    (err, result) => {
+      console.log(result);
+      if (!err) {
+        console.log(result);
+        res.status(200).send(result);
+      } else {
+        res.status(400).json({ error: "an error occured" });
+      }
+    }
+  );
+});
+
+// app.post("/createGroup", function (req, res) {
+//   console.log(req.body);
+//   console.log(req.body.members);
+//   console.log(req.body.groupName);
+//   const groupName = req.body.groupName;
+//   const members = req.body.members;
+//   const user = req.body.user;
+
+//   console.log(groupName);
+//   console.log(members);
+//   console.log(user);
+
+//   con.query(
+//     "insert into splitwise_db.groups (group_name) values (?)",
+//     [groupName],
+//     (err, result) => {
+//       if (err) {
+//         if (err.code === "ER_DUP_ENTRY") {
+//           console.log("Group already present!!");
+//           //res.status(409).json({ message: "Group already exists!" });
+//         }
+//       } else {
+//         //res.status(200).json({ message: "Group Addition successful" });
+//       }
+//     }
+//   );
+
+//   con.query(
+//     "insert into user_group (user_email, group_name) values (?, ?)",
+//     [user, groupName],
+//     (err, result) => {
+//       if (err) {
+//         console.log("Some Error1");
+//         //res.status(409).json({ message: "Some error Dumbass" });
+//       } else {
+//         // res.status(200).json({ message: "User successfully added" });
+//       }
+//     }
+//   );
+
+//   for (member of members) {
+//     con.query(
+//       "insert into user_group (user_email, group_name) values (?, ?)",
+//       [member, groupName],
+//       (err, result) => {
+//         if (err) {
+//           console.log("Some Error2");
+//           //res.status(409).json({ message: "Some error Dumbass" });
+//         } else {
+//           //res.status(200).json({ message: "Member successfully added" });
+//         }
+//       }
+//     );
+//   }
+//   res.status(200).json({ message: "Member and Group successfully added" });
+// });
 
 app.listen(PORT, () => {
   console.log("Server connected to port 3001");

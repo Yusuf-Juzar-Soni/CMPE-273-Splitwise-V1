@@ -7,13 +7,18 @@ import Dropdown from "react-bootstrap/Dropdown";
 import "./Dashboard.css";
 import bg_image0 from "../assets/login_logo.png";
 import LeftNavBar from "../LeftNavBar/LeftNavBar";
+import TopNavBar from "../TopNavBar";
 
 const Dashboard = function () {
   const isLogged = useSelector((state) => state.isLogged.username);
-  console.log("hello")
+  console.log("hello");
   return (
     <div className="dashboard">
-      <Navbar bg="success" expand="lg">
+      <div>
+        <TopNavBar />
+      </div>
+
+      {/* <Navbar bg="success" expand="lg">
         <Navbar.Brand href="#home">
           <img src={bg_image0} width="50" height="50"></img>
         </Navbar.Brand>
@@ -28,10 +33,8 @@ const Dashboard = function () {
             <Dropdown.Item href="/landing">Logout</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-      </Navbar>
-      {/* <NavDropdown variant="info" title={isLogged} id="basic-nav-dropdown">
-          <NavDropdown.Item href="/landing">Logout</NavDropdown.Item>
-        </NavDropdown> */}
+      </Navbar> */}
+      
       <div className="row">
         <div div className="col-md-4">
           <LeftNavBar />
