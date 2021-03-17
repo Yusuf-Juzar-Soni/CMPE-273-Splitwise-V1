@@ -287,7 +287,7 @@ app.get("/fetchAmountsIOwe/:email", (req, res) => {
   });
 });
 
-async function fetchResultIOweV1(user) {
+async function fetchResultIOwe(user) {
   let result = [];
   let groups = await groupWorkerFunc.getGroups(user);
   console.log(groups);
@@ -306,7 +306,6 @@ async function fetchResultIOweV1(user) {
   }
 
   for (let email of members) {
-    
     let sent = await groupWorkerFunc.getAmount(user, email.user_email);
     let recieved = await groupWorkerFunc.getAmount(email.user_email, user);
     let diff = sent[0].Sum - recieved[0].Sum;
@@ -319,7 +318,7 @@ async function fetchResultIOweV1(user) {
 app.get("/amount/:user", (req, res) => {
   console.log(req.params.user);
 
-  fetchResultIOweV1(req.params.user)
+  fetchResultIOwe(req.params.user)
     .then((result) => {
       res.send(result);
     })
@@ -327,6 +326,23 @@ app.get("/amount/:user", (req, res) => {
       //need to add error handling
       console.log(err);
     });
+});
+
+app.post("/settleUp", (req, res) => {
+  console.log("user", req.body.user);
+  console.log("sender",req.body.sender);
+
+  con.query(
+    "UPDATE transaction_table SET transaction_amount = 0 WHERE sender=? AND receiver=?",
+    [req.body.sender, req.body.user],
+    (err, result) => {
+      if (!err) {
+        res.status(200).send(result);
+      } else {
+        res.status(400).json({ error: "an error occured" });
+      }
+    }
+  );
 });
 
 // app.post("/createGroup", function (req, res) {
