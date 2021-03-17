@@ -8,6 +8,7 @@ import "./Dashboard.css";
 import bg_image0 from "../assets/login_logo.png";
 import LeftNavBar from "../LeftNavBar/LeftNavBar";
 import TopNavBar from "../TopNavBar";
+import DashboardInfo from "../DashboardInfo";
 
 const Dashboard = function () {
   const isLogged = useSelector((state) => state.isLogged.username);
@@ -36,15 +37,13 @@ const Dashboard = function () {
       </Navbar> */}
       
       <div className="row">
-        <div div className="col-md-4">
+        <div div className="col-md-2">
           <LeftNavBar />
         </div>
-        <div div className="col-md-4">
-          Column 2
+        <div div className="col-md-10">
+         <DashboardInfo/>
         </div>
-        <div div className="col-md-4">
-          Column 3
-        </div>
+        
       </div>
     </div>
   );

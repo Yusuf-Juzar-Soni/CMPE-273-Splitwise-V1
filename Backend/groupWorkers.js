@@ -72,6 +72,59 @@ async function createGroup(groupName, members, user) {
   }
 }
 
+let getAmount = (user, email) => {
+  return new Promise((resolve, reject) => {
+    console.log(email);
+    con.query(
+      "Select SUM(transaction_amount) As Sum from transaction_table where receiver=? and sender=?;",
+      [email, user],
+      (err, result) => {
+        console.log(result);
+        resolve(result);
+      }
+    );
+  });
+};
+
+let getMembersAcrossGroups = (stringGroups) => {
+  return new Promise((resolve, reject) => {
+    console.log(stringGroups);
+
+    con.query(
+      "SELECT distinct user_email from user_group where group_name in" +
+        "  ( " +
+        stringGroups +
+        " ) ",
+      (err, result) => {
+        resolve(result);
+      }
+    );
+  });
+};
+
+let getGroups = (user) => {
+  return new Promise((resolve, reject) => {
+    try {
+      con.query(
+        "SELECT distinct group_name from user_group where user_email=? ",
+        [user],
+        (err, result) => {
+          if (result) {
+            resolve(result);
+          } else {
+            reject(err);
+          }
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
+
 module.exports = {
   createGroup,
+  getAmount,
+  getMembersAcrossGroups,
+  getGroups,
 };

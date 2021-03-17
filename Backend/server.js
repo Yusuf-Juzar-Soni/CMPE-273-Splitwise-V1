@@ -6,6 +6,7 @@ const PORT = 3001;
 const session = require("express-session");
 const groupWorkerFunc = require("./groupWorkers");
 const billWorkerFunc = require("./billWorker");
+const transactWorkerFunc = require("./transactionWorker");
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 app.use(
@@ -266,6 +267,66 @@ app.post("/userdetails", (req, res) => {
       }
     }
   );
+});
+
+app.get("/fetchAmountsOwed/:email", (req, res) => {
+  transactWorkerFunc.amountOwedToMe(req.params.email).then((result) => {
+    if (result) {
+      console.log("Success fetched owed amount");
+      res.status(200).send(result);
+    }
+  });
+});
+
+app.get("/fetchAmountsIOwe/:email", (req, res) => {
+  transactWorkerFunc.amountIOwe(req.params.email).then((result) => {
+    if (result) {
+      console.log("Success fetched owed amount");
+      res.status(200).send(result);
+    }
+  });
+});
+
+async function fetchResultIOweV1(user) {
+  let result = [];
+  let groups = await groupWorkerFunc.getGroups(user);
+  console.log(groups);
+  let stringGroups = "";
+  if (!groups) {
+    return;
+  }
+  for (let group of groups) {
+    stringGroups = stringGroups + "'" + group.group_name + "',";
+  }
+  stringGroups = stringGroups.substring(0, stringGroups.length - 1);
+  let members = await groupWorkerFunc.getMembersAcrossGroups(stringGroups);
+  console.log("hello", members);
+  if (!members) {
+    members = [];
+  }
+
+  for (let email of members) {
+    
+    let sent = await groupWorkerFunc.getAmount(user, email.user_email);
+    let recieved = await groupWorkerFunc.getAmount(email.user_email, user);
+    let diff = sent[0].Sum - recieved[0].Sum;
+    result.push({ email: email.user_email, amt: diff });
+  }
+  console.log(result);
+  return result;
+}
+
+app.get("/amount/:user", (req, res) => {
+  console.log(req.params.user);
+
+  fetchResultIOweV1(req.params.user)
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      //need to add error handling
+      console.log(err);
+    });
 });
 
 // app.post("/createGroup", function (req, res) {
