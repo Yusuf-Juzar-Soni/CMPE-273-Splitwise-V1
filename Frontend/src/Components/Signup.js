@@ -23,6 +23,13 @@ function Signup() {
     history.push("/dash");
   };
 
+  const handleClick = (emailId) => {
+    history.push({
+      pathname: "/dash",
+      search: `?email=${emailId}`,
+    });
+  };
+
   const onSignup = (e) => {
     e.preventDefault();
 
@@ -38,7 +45,9 @@ function Signup() {
         console.log(response);
         console.log(isLogged);
         loadSuccessful();
+        handleClick(response.data.email);
         dispatch(logged(response.data.name, response.data.email));
+        handleClick(response.data.email);
       })
       .catch((err) => {
         if (err.response && err.reponse.data) {

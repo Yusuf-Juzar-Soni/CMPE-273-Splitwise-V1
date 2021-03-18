@@ -14,6 +14,7 @@ import { ListGroup, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 const queryString = require("query-string");
 import { useLocation } from "react-router-dom";
+import "./LeftNavBar.css";
 
 function LeftNavBar() {
   const history = useHistory();
@@ -73,7 +74,7 @@ function LeftNavBar() {
   return (
     <div>
       <div>
-        <Nav defaultActiveKey="/home" className="flex-column">
+        <Nav  defaultActiveKey="/home" className="flex-column" color="red">
           <Nav.Link onClick={(event) => redirectToDashboard(parsed.email)}>
             Dashboard
           </Nav.Link>
@@ -81,7 +82,7 @@ function LeftNavBar() {
             Activity
           </Nav.Link>
           <Nav.Link>Groups</Nav.Link>
-          <ListGroup>
+          <ListGroup className="list-group-design">
             {group_names.map((item) => (
               <Button
                 value={item}

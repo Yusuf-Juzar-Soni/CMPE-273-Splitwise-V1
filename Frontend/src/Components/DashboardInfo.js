@@ -12,8 +12,10 @@ import {
   Card,
   Modal,
 } from "react-bootstrap";
+import "./DashboardInfo.css";
 
 function DashboardInfo() {
+  const history = useHistory();
   const location = useLocation();
   const parsed = queryString.parse(location.search);
   const email = parsed.email;
@@ -128,31 +130,34 @@ function DashboardInfo() {
       });
   };
 
+  function redirectToCreate(emailId) {
+    history.push({
+      pathname: "/creategroup",
+      search: `?email=${emailId}`,
+    });
+  }
+
   return (
     <div>
       <div className="row">
-        <Card
-          bg="light"
-          className="display_modal_bar"
-          style={{ width: "100rem" }}
-        >
-          <Card.Header>
-            <div className="row">
-              <div className="col-md-11">
-                <h3>DASHBOARD</h3>
-              </div>
-              <div className="col-md-1">
-                <Button variant="primary" onClick={handleShow}>
-                  SETTLE UP
-                </Button>
-              </div>
-            </div>
-          </Card.Header>
-        </Card>
+        <div className="row">
+          <div className="col-md-12">
+            <Button className="button-settleup" size="sm" onClick={handleShow}>
+              Settle Up
+            </Button>
+            <Button
+              className="button-creategroup"
+              size="sm"
+              onClick={(event) => redirectToCreate(parsed.email)}
+            >
+              Create Group
+            </Button>
+          </div>
+        </div>
       </div>
       <br></br>
       <br></br>
-      <Row>
+      <div className="row">
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>SettleUp Modal</Modal.Title>
@@ -160,7 +165,7 @@ function DashboardInfo() {
           <Modal.Body>
             <Form>
               <Form.Group>
-                <Form.Label>Select Who You Want to Settle Up With :</Form.Label>
+                <Form.Label><b>Select Who You Want to Settle Up With :</b></Form.Label>
                 <Form.Control
                   as="select"
                   onChange={(e) => {
@@ -180,50 +185,64 @@ function DashboardInfo() {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button className="button-close" onClick={handleClose}>
               Close
             </Button>
 
-            <Button variant="primary" onClick={handleSettleUp}>
+            <Button className="button-settleup" onClick={handleSettleUp}>
               SettleUp
             </Button>
           </Modal.Footer>
         </Modal>
-      </Row>
+      </div>
+      <div class="row justify-content-center">
+        <title>Welcome to Dashboard</title>
+        <h4>Welcome to Dashboard</h4>
+      </div>
+      <div className="row mt-2">
+        <div className="col-md-4"><b>YOU OWE: ${dena}</b></div>
+        <div className="col-md-4"><b>YOU ARE OWED: ${lena}</b></div>
+        <div className="col-md-4"><b>BALANCE: ${bal}</b></div>
+      </div>
 
-      <Row>
-        <Col md={4}>YOU OWE:{dena}</Col>
-        <Col md={4}>YOU ARE OWED:{lena}</Col>
-        <Col md={4}>BALANCE: {bal}</Col>
-      </Row>
-
-      <Row className="show-grid">
-        <Col md={6}>
-          <p>YOU OWE</p>
-          <ListGroup>
-            {owe.map((amt) => (
-              <ListGroup.Item className="links-acttivity-groups">
-                {amt.email} {amt.amt}
-                <br></br>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Col>
-        <Col md={6}>
-          <p>YOU ARE OWED</p>
-          <ListGroup>
-            {owed.map((amount) => (
-              <ListGroup.Item className="links-acttivity-groups">
-                {amount.email} &nbsp;&nbsp; {amount.amt}
-                <br></br>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Col>
-      </Row>
-      <Row>
-        <div></div>
-      </Row>
+      <div className="show-grid">
+        <div className="row mt-4">
+          <div className="col-md-6">
+            <p>
+              <center>
+                <b>
+                  <u>YOU OWE</u>
+                </b>
+              </center>
+            </p>
+            <ListGroup>
+              {owe.map((amt) => (
+                <ListGroup.Item variant="danger" className="links-acttivity-groups">
+                  You owe <b>{amt.email}</b>&nbsp;<b>${amt.amt}</b> 
+                  <br></br>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </div>
+          <div className="col-md-6">
+            <p>
+              <center>
+                <b>
+                  <u>YOU ARE OWED</u>
+                </b>
+              </center>
+            </p>
+            <ListGroup>
+              {owed.map((amount) => (
+                <ListGroup.Item variant="success" className="links-acttivity-groups">
+                  <b>{amount.email}</b> owes you&nbsp;&nbsp; <b>${amount.amt}</b>
+                  <br></br>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

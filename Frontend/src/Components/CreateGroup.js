@@ -11,6 +11,17 @@ import { useHistory } from "react-router-dom";
 const queryString = require("query-string");
 import Axios from "axios";
 import TopNavBar from "./TopNavBar";
+import {
+  Button,
+  Grid,
+  Row,
+  Col,
+  ListGroup,
+  Form,
+  Card,
+  Modal,
+} from "react-bootstrap";
+import './CreateGroup.css';
 
 function CreateGroup() {
   const isLogged = useSelector((state) => state.isLogged.username);
@@ -89,14 +100,12 @@ function CreateGroup() {
           <TopNavBar />
         </div>
         <div className="row">
-          <div div className="col-md-4">
+          <div div className="col-md-2">
             <LeftNavBar />
           </div>
-          <div div className="col-md-8">
+          <div div className="col-md-10">
             <div className="row">
-              <div className="col-md-4"></div>
-
-              <div className="col-md-4">
+              <div className="col-md-10">
                 <div className="mytitle" style={{ fontSize: 30 }}>
                   <center>
                     <b>ADD A GROUP</b>
@@ -129,9 +138,9 @@ function CreateGroup() {
                       isMulti
                     />
                   </div>
-                  <button class="btn" onClick={onSubmit}>
+                  <Button className="button-create" onClick={onSubmit}>
                     Create a group
-                  </button>
+                  </Button>
                 </form>
               </div>
             </div>

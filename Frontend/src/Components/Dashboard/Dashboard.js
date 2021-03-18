@@ -18,23 +18,6 @@ const Dashboard = function () {
       <div>
         <TopNavBar />
       </div>
-
-      {/* <Navbar bg="success" expand="lg">
-        <Navbar.Brand href="#home">
-          <img src={bg_image0} width="50" height="50"></img>
-        </Navbar.Brand>
-        <Nav className="mr-auto">
-          <Nav.Link href="#home" />
-        </Nav>
-        <Dropdown>
-          <Dropdown.Toggle variant="info" id="dropdown-basic">
-            {isLogged}
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item href="/landing">Logout</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </Navbar> */}
       
       <div className="row">
         <div div className="col-md-2">

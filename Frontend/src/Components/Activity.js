@@ -10,6 +10,7 @@ import { useHistory, useLocation } from "react-router-dom";
 const queryString = require("query-string");
 import Axios from "axios";
 import TopNavBar from "./TopNavBar";
+import "./Activity.css";
 import {
   Nav,
   Row,
@@ -28,13 +29,13 @@ const Activity = () => {
   const [activity, setActivity] = useState([]);
   const parsed = queryString.parse(location.search);
   const email = parsed.email;
-  
+
   useEffect(() => {
     Axios.get("http://localhost:3001/Activity/" + email)
       .then((response) => {
         console.log(response);
         setActivity(response.data);
-        console.log(activity)
+        console.log(activity);
       })
       .catch((e) => {
         console.log(e);
@@ -43,25 +44,37 @@ const Activity = () => {
 
   return (
     <div>
-        <div>
-          <TopNavBar />
+      <div>
+        <TopNavBar />
+      </div>
+      <div className="row">
+        <div div className="col-md-2">
+          <LeftNavBar />
         </div>
-        <h4>Recent Activity</h4>   
-       <br></br> 
-        <div className="row">
-      <ListGroup>
-        {activity.map((activity) => (
-          <ListGroup.Item
-            // key={bill.amount}
-            className="links-acttivity-groups"
-          >
-             
-            {activity.created_by} &nbsp;paid&nbsp; {activity.bill_amount}&nbsp; in &nbsp; {activity.bill_group}&nbsp;for&nbsp; {activity.bill_desc}&nbsp;on&nbsp;{activity.bill_timestamp} <br></br>
-            
-
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+        <div className="col-md-10">
+          <h4>Recent Activity</h4>
+          <br></br>
+          <div className="row ml-1">
+            <div className="col-sm-12">
+              <ListGroup variant="flush">
+                {activity.map((activity) => (
+                  <ListGroup.Item
+                    variant="info"
+                    // key={bill.amount}
+                    className="links-acttivity-groups"
+                  >
+                    <b>{activity.created_by}</b> &nbsp;paid&nbsp;{" "}
+                    <b>{activity.bill_amount}</b>
+                    &nbsp; in &nbsp; <b>{activity.bill_group}</b>&nbsp;for&nbsp;
+                    <b>{activity.bill_desc}</b>&nbsp;on&nbsp;
+                    <b>{activity.bill_timestamp}</b>
+                    <br></br>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

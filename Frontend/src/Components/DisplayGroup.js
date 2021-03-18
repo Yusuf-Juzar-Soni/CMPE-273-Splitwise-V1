@@ -10,6 +10,7 @@ import { useHistory, useLocation } from "react-router-dom";
 const queryString = require("query-string");
 import Axios from "axios";
 import TopNavBar from "./TopNavBar";
+import "./DisplayGroup.css";
 import {
   Nav,
   Row,
@@ -124,87 +125,94 @@ function DisplayGroup() {
           <TopNavBar />
         </div>
 
-        <div className="row">
-          <Card
-            bg="light"
-            className="display_modal_bar"
-            style={{ width: "100rem" }}
-          >
-            <Card.Header>
-              <div className="row">
-                <div className="col-md-11">
-                  <h3>Group Name {groupName}</h3>
-                </div>
-                <div className="col-md-1">
-                  <Button variant="primary" onClick={handleShow}>
-                    Add Bill
-                  </Button>
-                </div>
-              </div>
-            </Card.Header>
-          </Card>
+        <div className="row justify-content-center">
+          <div className="col-md-11">
+            <h4>Group Name {groupName}</h4>
+          </div>
+          <div className="col-md-1">
+            <Button className="button-addBillPrimary" onClick={handleShow}>
+              Add Bill
+            </Button>
+          </div>
         </div>
+
         <br></br>
         <br></br>
         <div className="row">
-          <ListGroup>
-            {member_names.map((item) => (
-              <ListGroup.Item>{item.user_email}</ListGroup.Item>
-            ))}
-          </ListGroup>
-        </div>
-        <div className="row">
-          <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-              <Modal.Title>Add a Bill</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter description"
-                    onChange={(e) => {
-                      setDescription(e.target.value);
-                    }}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formBasicEmail">
-                  <Form.Label>Amount</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter amount"
-                    onChange={(e) => {
-                      setAmount(e.target.value);
-                    }}
-                  />
-                </Form.Group>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
-              </Button>
-              <Button variant="primary" onClick={handleSaveChanges}>
-                Save Changes
-              </Button>
-            </Modal.Footer>
-          </Modal>
-          <ListGroup>
-            {bills.map((bill) => (
-              <ListGroup.Item
-                // key={bill.amount}
-                className="links-dashboard-groups"
-              >
-                Created By: {bill.created_by} <br></br>
-                Bill Amount: {bill.bill_amount}
-                <br></br>
-                Created On: {bill.bill_timestamp}
-                <br></br>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
+          <div className="col-md-3">
+            <h4>Group Members</h4>
+
+            <ListGroup>
+              {member_names.map((item) => (
+                <ListGroup.Item variant="light">
+                  <b>{item.user_email}</b>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </div>
+
+          <div className="col-md-9">
+            <h4>Bills in Group</h4>
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add a Bill</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form>
+                  <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter description"
+                      onChange={(e) => {
+                        setDescription(e.target.value);
+                      }}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Amount</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter amount"
+                      onChange={(e) => {
+                        setAmount(e.target.value);
+                      }}
+                    />
+                  </Form.Group>
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button className="button-close" onClick={handleClose}>
+                  Close
+                </Button>
+                <Button className="button-addBillSecondary" onClick={handleSaveChanges}>
+                  Add Bill
+                </Button>
+              </Modal.Footer>
+            </Modal>
+            <ListGroup>
+              {bills.map((bill) => (
+                <ListGroup.Item
+                  variant="warning"
+                  // key={bill.amount}
+                  className="links-dashboard-groups"
+                >
+                  <b>
+                    Created By:<i> {bill.created_by}</i>
+                  </b>
+                  <br></br>
+                  <b>
+                    Bill Amount:<i> ${bill.bill_amount}</i>
+                  </b>
+                  <br></br>
+                  <b>
+                    Created On: <i>{bill.bill_timestamp}</i>
+                  </b>
+                  <br></br>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </div>
         </div>
       </div>
     </div>

@@ -60,7 +60,7 @@ app.post("/signup", function (req, res) {
       } else {
         const user = { username: req.body.email, password: req.body.password };
         req.session.user = user;
-        res.status(200).json({ name: req.body.name });
+        res.status(200).json({ name: req.body.name, email: req.body.email });
       }
     }
   );
@@ -330,7 +330,7 @@ app.get("/amount/:user", (req, res) => {
 
 app.post("/settleUp", (req, res) => {
   console.log("user", req.body.user);
-  console.log("sender",req.body.sender);
+  console.log("sender", req.body.sender);
 
   con.query(
     "UPDATE transaction_table SET transaction_amount = 0 WHERE sender=? AND receiver=?",
