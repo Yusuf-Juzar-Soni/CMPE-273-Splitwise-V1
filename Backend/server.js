@@ -74,7 +74,7 @@ app.post("/login", function (req, res) {
     "SELECT * FROM  users WHERE user_email=? AND password=?",
     [email, password],
     (err, result) => {
-      if (err) throw err;
+      
       if (result) {
         if (result.length) {
           let user = {

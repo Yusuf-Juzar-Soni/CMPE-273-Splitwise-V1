@@ -138,7 +138,7 @@ function CreateGroup() {
                       isMulti
                     />
                   </div>
-                  <Button className="button-create" onClick={onSubmit}>
+                  <Button className="button-create"  onClick={onSubmit}>
                     Create a group
                   </Button>
                 </form>

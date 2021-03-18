@@ -7,14 +7,25 @@ import { useSelector, useDispatch } from "react-redux";
 import "./Signup";
 import logged from "../actions";
 import Navbar from "react-bootstrap/Navbar";
-import Button from "react-bootstrap/Button";
 import bg_image0 from "./assets/login_logo.png";
+import {
+  Button,
+  Grid,
+  Row,
+  Col,
+  ListGroup,
+  Form,
+  Card,
+  Modal,
+} from "react-bootstrap";
 
 function Signup() {
   const [name, nameChangeHandler] = useState("");
   const [email, emailChangeHandler] = useState("");
   const [password, passwordChangeHandler] = useState("");
   const history = useHistory();
+  const [alt, setAlert] = useState("");
+  const [validated, setValidated] = useState(false);
 
   const isLogged = useSelector((state) => state.isLoggedIn);
   const dispatch = useDispatch();
@@ -32,8 +43,9 @@ function Signup() {
 
   const onSignup = (e) => {
     e.preventDefault();
+    setValidated(true);
 
-    axios.defaults.withCredentials = true;
+    //axios.defaults.withCredentials = true;
 
     axios
       .post("http://localhost:3001/signup", {
@@ -47,11 +59,11 @@ function Signup() {
         loadSuccessful();
         handleClick(response.data.email);
         dispatch(logged(response.data.name, response.data.email));
-        handleClick(response.data.email);
       })
       .catch((err) => {
-        if (err.response && err.reponse.data) {
-          alert(err.response.data.message);
+        if (err.response) {
+          console.log(err.response);
+          setAlert(err.response.data.message);
         }
       });
   };
@@ -69,67 +81,94 @@ function Signup() {
         </Button>
         <Button variant="success" href="./signup">
           Signup
-        </Button>{" "}
+        </Button>
       </Navbar>
-
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-12 .col-md-6 .offset-md-3">
-            <center>
-              <h4 style={{ color: "gray", fontSize: 19, marginBottom: 22 }}>
-                INTRODUCE YOURSELF
-              </h4>
-              <form onsubmit="">
-                <div class="form-group Login">
-                  <label for="InputName" style={{ fontSize: 30 }}>
-                    Hi there! My name is
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="InputName"
-                    placeholder="Enter  Name"
-                    onChange={(e) => {
-                      nameChangeHandler(e.target.value);
-                    }}
-                  />
-                </div>
-                <div class="form-group Login">
-                  <label for="InputEmail">
-                    Here's my <b>email address:</b>
-                  </label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="InputEmail"
-                    placeholder="Enter email"
-                    onChange={(e) => {
-                      emailChangeHandler(e.target.value);
-                    }}
-                  />
-                </div>
-                <div class="form-group Login">
-                  <label for="InputPassword">
-                    And here's my <b>password:</b>
-                  </label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="InputPassword"
-                    placeholder="Password"
-                    onChange={(e) => {
-                      passwordChangeHandler(e.target.value);
-                    }}
-                  />
-                </div>
-                <Button variant="warning" type="submit" onClick={onSignup}>
-                  SIGN UP!
-                </Button>
-              </form>
-            </center>
-          </div>
+      <Form noValidate validated={validated}>
+        <Form.Row>
+          <Form.Group
+            as={Col}
+            md={{ span: 5, offset: 3 }}
+            controlId="validationCustom01"
+          >
+            <Form.Label className="text-center">
+              <b>Enter Username</b>
+            </Form.Label>
+            <Form.Control
+              className="text-center"
+              style={{ width: "100%" }}
+              required
+              type="text"
+              placeholder="AddName"
+              onChange={(e) => {
+                nameChangeHandler(e.target.value);
+              }}
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group
+            as={Col}
+            md={{ span: 5, offset: 3 }}
+            controlId="validationCustom02"
+          >
+            <Form.Label className="text-center">
+              <b>Enter Email</b>
+            </Form.Label>
+            <Form.Control
+              className="text-center"
+              style={{ width: "100%" }}
+              required
+              type="email"
+              placeholder="Email"
+              onChange={(e) => {
+                emailChangeHandler(e.target.value);
+              }}
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group
+            as={Col}
+            md={{ span: 5, offset: 3 }}
+            controlId="validationCustom03"
+          >
+            <Form.Label className="text-center">
+              <b>Enter Password</b>
+            </Form.Label>
+            <Form.Control
+              className="text-center"
+              style={{ width: "100%" }}
+              required
+              type="password"
+              placeholder="Password"
+              onChange={(e) => {
+                passwordChangeHandler(e.target.value);
+              }}
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group
+            as={Col}
+            md={{ span: 5, offset: 3 }}
+            controlId="validationCustom03"
+          >
+            <Button
+              className="button-settleup"
+              type="submit"
+              onClick={onSignup}
+            >
+              SIGNUP
+            </Button>
+          </Form.Group>
+        </Form.Row>
+        <div>
+          <h4>{alt}</h4>
         </div>
-      </div>
+      </Form>
     </div>
   );
 }

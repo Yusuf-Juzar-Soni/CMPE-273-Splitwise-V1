@@ -2,16 +2,28 @@ import { React, useState } from "react";
 import axios from "axios";
 import alert from "alert";
 import Navbar from "react-bootstrap/Navbar";
-import Button from "react-bootstrap/Button";
+
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Nav from "react-bootstrap/esm/Nav";
 import logged from "../actions";
 import bg_image0 from "./assets/login_logo.png";
+import {
+  Button,
+  Grid,
+  Row,
+  Col,
+  ListGroup,
+  Form,
+  Card,
+  Modal,
+} from "react-bootstrap";
 
 function Login() {
   const [email, emailChangeHandler] = useState("");
   const [password, passwordChangeHandler] = useState("");
+  const [validated, setValidated] = useState(false);
+
   const history = useHistory();
 
   const isLogged = useSelector((state) => state.isLogged);
@@ -31,6 +43,7 @@ function Login() {
   const onLogin = (e) => {
     e.preventDefault();
     console.log("inside function");
+    setValidated(true);
     axios
       .post("http://localhost:3001/login", {
         email,
@@ -50,7 +63,7 @@ function Login() {
         );
       })
       .catch((err) => {
-        if (err.response && err.reponse.data) {
+        if (err.response) {
           alert(err.response.data.message);
         }
       });
@@ -69,48 +82,65 @@ function Login() {
         </Button>
         <Button variant="success" href="./signup">
           Signup
-        </Button>{" "}
+        </Button>
       </Navbar>
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-12 .col-md-6 .offset-md-3">
-            <center>
-              <h4 style={{ color: "gray", fontSize: 19, marginBottom: 22 }}>
-                WELCOME TO SPLITWISE
-              </h4>
-              <form>
-                <div class="form-group Login">
-                  <label for="InputEmail">Email address</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="InputEmail"
-                    placeholder="Enter email"
-                    onChange={(e) => {
-                      emailChangeHandler(e.target.value);
-                    }}
-                  />
-                </div>
-                <div class="form-group Login">
-                  <label for="InputPassword">Password</label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="InputPassword"
-                    placeholder="Password"
-                    onChange={(e) => {
-                      passwordChangeHandler(e.target.value);
-                    }}
-                  />
-                </div>
-                <Button variant="danger" type="submit" onClick={onLogin}>
-                  LOGIN
-                </Button>
-              </form>
-            </center>
-          </div>
-        </div>
-      </div>
+      <Form noValidate validated={validated}>
+        <Form.Row>
+          <Form.Group
+            as={Col}
+            md={{ span: 5, offset: 3 }}
+            controlId="validationCustom01"
+          >
+            <Form.Label className="text-center">
+              <b>Enter Email</b>
+            </Form.Label>
+            <Form.Control
+              className="text-center"
+              style={{ width: "100%" }}
+              required
+              type="email"
+              placeholder="Email"
+              onChange={(e) => {
+                emailChangeHandler(e.target.value);
+              }}
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group
+            as={Col}
+            md={{ span: 5, offset: 3 }}
+            controlId="validationCustom02"
+          >
+            <Form.Label className="text-center">
+              <b>Enter Password</b>
+            </Form.Label>
+            <Form.Control
+              className="text-center"
+              style={{ width: "100%" }}
+              required
+              type="password"
+              placeholder="Password"
+              onChange={(e) => {
+                passwordChangeHandler(e.target.value);
+              }}
+            />
+            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group
+            as={Col}
+            md={{ span: 5, offset: 3 }}
+            controlId="validationCustom03"
+          >
+            <Button className="button-settleup" type="submit" onClick={onLogin}>
+              LOGIN
+            </Button>
+          </Form.Group>
+        </Form.Row>
+      </Form>
     </div>
   );
 }
