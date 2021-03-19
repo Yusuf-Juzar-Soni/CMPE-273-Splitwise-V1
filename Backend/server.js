@@ -7,6 +7,12 @@ const session = require("express-session");
 const groupWorkerFunc = require("./groupWorkers");
 const billWorkerFunc = require("./billWorker");
 const transactWorkerFunc = require("./transactionWorker");
+const multer = require("multer");
+const fs = require("fs");
+const util = require("util");
+const upload = multer();
+const pipeline = util.promisify(require("stream").pipeline);
+app.use(express.static(__dirname + "/public"));
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
 app.use(
@@ -74,7 +80,6 @@ app.post("/login", function (req, res) {
     "SELECT * FROM  users WHERE user_email=? AND password=?",
     [email, password],
     (err, result) => {
-      
       if (result) {
         if (result.length) {
           let user = {
@@ -98,7 +103,7 @@ app.post("/login", function (req, res) {
 app.post("/dashboard", (req, res) => {
   let { email } = req.body;
   con.query(
-    "SELECT group_name FROM user_group WHERE user_email=?",
+    "SELECT group_name FROM user_group WHERE user_email=? AND invite_status= 1",
     [email],
     function (err, result) {
       let groups = [];
@@ -129,7 +134,7 @@ app.post("/allMembers", (req, res) => {
   console.log(req.body.email);
   console.log(req.body.groupname);
   con.query(
-    "select user_email from user_group where user_email !=? and group_name = ?",
+    "select user_email from user_group where user_email !=? and group_name = ? and invite_status= 1",
     [req.body.email, req.body.groupname],
     (err, result) => {
       if (!err) {
@@ -173,19 +178,6 @@ app.post("/addBill", function (req, res) {
 
   //   }
   // );
-
-  // con.query(
-  //   "SELECT MAX(bill_id) from bill_table",
-  //   (err, result) => {
-  //     if (err) {
-  //       console.log("could not fetch bill id");
-  //     } else {
-  //       console.log(result);
-  //       return result;
-  //     }
-  //   }
-  // );
-  //console.log(bill_id);
 
   for (member of members) {
     con.query(
@@ -328,7 +320,7 @@ app.get("/amount/:user", (req, res) => {
     });
 });
 
-app.post("/settleUp", (req, res) => {
+app.post("/settleUpOwe", (req, res) => {
   console.log("user", req.body.user);
   console.log("sender", req.body.sender);
 
@@ -345,63 +337,65 @@ app.post("/settleUp", (req, res) => {
   );
 });
 
-// app.post("/createGroup", function (req, res) {
-//   console.log(req.body);
-//   console.log(req.body.members);
-//   console.log(req.body.groupName);
-//   const groupName = req.body.groupName;
-//   const members = req.body.members;
-//   const user = req.body.user;
+app.post("/settleUpOwed", (req, res) => {
+  console.log("user", req.body.user);
+  console.log("sender", req.body.sender);
 
-//   console.log(groupName);
-//   console.log(members);
-//   console.log(user);
+  con.query(
+    "UPDATE transaction_table SET transaction_amount = 0 WHERE sender=? AND receiver=?",
+    [req.body.user,req.body.sender],
+    (err, result) => {
+      if (!err) {
+        res.status(200).send(result);
+      } else {
+        res.status(400).json({ error: "an error occured" });
+      }
+    }
+  );
+});
 
-//   con.query(
-//     "insert into splitwise_db.groups (group_name) values (?)",
-//     [groupName],
-//     (err, result) => {
-//       if (err) {
-//         if (err.code === "ER_DUP_ENTRY") {
-//           console.log("Group already present!!");
-//           //res.status(409).json({ message: "Group already exists!" });
-//         }
-//       } else {
-//         //res.status(200).json({ message: "Group Addition successful" });
-//       }
-//     }
-//   );
+app.get("/getInvites/:email", (req, res) => {
+  con.query(
+    "SELECT group_name FROM user_group WHERE user_email=? AND invite_status = 0;",
+    [req.params.email],
+    (err, result) => {
+      if (result) {
+        console.log(result);
+        const group_list = [];
+        for (let i = 0; i < result.length; i++) {
+          console.log("Inside if1");
+          group_list.push(result[i].group_name);
+        }
+        res.status(200).json({ group_list: group_list });
+      } else {
+        res.status(400).json({ message: "failed" });
+      }
+    }
+  );
+});
 
-//   con.query(
-//     "insert into user_group (user_email, group_name) values (?, ?)",
-//     [user, groupName],
-//     (err, result) => {
-//       if (err) {
-//         console.log("Some Error1");
-//         //res.status(409).json({ message: "Some error Dumbass" });
-//       } else {
-//         // res.status(200).json({ message: "User successfully added" });
-//       }
-//     }
-//   );
+app.post("/acceptInvite", (req, res) => {
+  console.log("hello");
 
-//   for (member of members) {
-//     con.query(
-//       "insert into user_group (user_email, group_name) values (?, ?)",
-//       [member, groupName],
-//       (err, result) => {
-//         if (err) {
-//           console.log("Some Error2");
-//           //res.status(409).json({ message: "Some error Dumbass" });
-//         } else {
-//           //res.status(200).json({ message: "Member successfully added" });
-//         }
-//       }
-//     );
-//   }
-//   res.status(200).json({ message: "Member and Group successfully added" });
-// });
+  console.log(req.body.selectedgroup);
+  console.log(req.body.user);
+
+  console.log("inside cond");
+  con.query(
+    "UPDATE user_group SET invite_status = 1 where group_name= ? and user_email = ?",
+    [req.body.selectedgroup, req.body.user],
+    (err, result) => {
+      if (!err) {
+        res.status(200).json({ message: "success" });
+      } else {
+        res.status(400).json({ error: "an error occured" });
+      }
+    }
+  );
+});
 
 app.listen(PORT, () => {
   console.log("Server connected to port 3001");
 });
+
+module.exports = app;

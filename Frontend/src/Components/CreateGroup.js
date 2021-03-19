@@ -21,7 +21,7 @@ import {
   Card,
   Modal,
 } from "react-bootstrap";
-import './CreateGroup.css';
+import "./CreateGroup.css";
 
 function CreateGroup() {
   const isLogged = useSelector((state) => state.isLogged.username);
@@ -60,6 +60,17 @@ function CreateGroup() {
     console.log(user);
   }, []);
 
+  const handleClickDashboard = () => {
+    history.push({
+      pathname: "/dash",
+      search: "?email=" + parsed.email,
+    });
+  };
+
+  const dashboard = () => {
+    handleClickDashboard();
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
     console.log(members);
@@ -72,7 +83,6 @@ function CreateGroup() {
       members: finalMembers,
     })
       .then((response) => {
-        // eslint-disable-next-line no-console
         console.log(response);
         // setUsers(response.data);
       })
@@ -82,7 +92,7 @@ function CreateGroup() {
           setAlert(e.response.data.message);
         }
       });
-    //dashboard();
+    dashboard();
   };
 
   const onChange = (opt) => {
@@ -122,7 +132,6 @@ function CreateGroup() {
                       id="groupName"
                       aria-describedby="emailHelp"
                       placeholder="Enter Group Name"
-                      //   onChange={this.handleGroupName}
                       onChange={(e) => {
                         setGroup(e.target.value);
                       }}
@@ -138,7 +147,7 @@ function CreateGroup() {
                       isMulti
                     />
                   </div>
-                  <Button className="button-create"  onClick={onSubmit}>
+                  <Button className="button-create" onClick={onSubmit}>
                     Create a group
                   </Button>
                 </form>

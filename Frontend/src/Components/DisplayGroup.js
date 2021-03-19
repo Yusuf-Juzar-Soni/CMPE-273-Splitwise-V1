@@ -61,7 +61,6 @@ function DisplayGroup() {
       members: member_names,
     })
       .then((response) => {
-        // eslint-disable-next-line no-console
         console.log(response.data);
         fetchBills(group).then((result) => {
           console.log(result);
@@ -79,7 +78,6 @@ function DisplayGroup() {
     return new Promise((resolve, reject) => {
       Axios.get("http://localhost:3001/fetchBills/" + group)
         .then((response) => {
-          // eslint-disable-next-line no-console
           console.log(response.data);
           resolve(response.data);
         })
@@ -98,12 +96,7 @@ function DisplayGroup() {
     })
       .then((response) => {
         console.log(response);
-        let values = [];
-        // response.data.forEach((ele) => {
-        //   console.log(ele);
-        //   values.push(ele.email);
 
-        // });
         setMembers(response.data);
       })
       .catch((e) => {
@@ -185,7 +178,10 @@ function DisplayGroup() {
                 <Button className="button-close" onClick={handleClose}>
                   Close
                 </Button>
-                <Button className="button-addBillSecondary" onClick={handleSaveChanges}>
+                <Button
+                  className="button-addBillSecondary"
+                  onClick={handleSaveChanges}
+                >
                   Add Bill
                 </Button>
               </Modal.Footer>
@@ -194,7 +190,6 @@ function DisplayGroup() {
               {bills.map((bill) => (
                 <ListGroup.Item
                   variant="warning"
-                  // key={bill.amount}
                   className="links-dashboard-groups"
                 >
                   <b>

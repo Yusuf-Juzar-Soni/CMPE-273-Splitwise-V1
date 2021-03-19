@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
-import Nav from "react-bootstrap/esm/Nav";
+import { Nav } from "react-bootstrap";
 import bg_image0 from "../assets/login_logo.png";
 import bg_image1 from "../assets/splitwise_home_2.png";
 import bg_image2 from "../assets/splitwise_home_3.png";
@@ -17,12 +17,12 @@ const Landing = function () {
           <Nav className="mr-auto">
             <Nav.Link href="#home" />
           </Nav>
-          <Button variant="success" href="./login">
+          <Button data-testid="Login" variant="success" href="./login">
             Login
           </Button>
           <Button variant="success" href="./signup">
             Signup
-          </Button>{" "}
+          </Button>
         </Navbar>
       </div>
       <div>

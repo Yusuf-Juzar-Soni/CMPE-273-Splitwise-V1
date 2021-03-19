@@ -52,7 +52,7 @@ const Activity = () => {
           <LeftNavBar />
         </div>
         <div className="col-md-10">
-          <h4>Recent Activity</h4>
+          <h4 data-testid="Activity">Recent Activity</h4>
           <br></br>
           <div className="row ml-1">
             <div className="col-sm-12">

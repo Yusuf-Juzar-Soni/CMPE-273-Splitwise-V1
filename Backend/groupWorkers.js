@@ -6,11 +6,11 @@ const con = mysql.createConnection({
   database: "splitwise_db",
 });
 
-let createUserGroup = (member, groupName) => {
+let createUserGroup = (member, groupName, status) => {
   return new Promise((resolve, reject) => {
     con.query(
-      "insert into user_group (user_email, group_name) values (?, ?)",
-      [member, groupName],
+      "insert into user_group (user_email, group_name,invite_status) values (?, ?, ?)",
+      [member, groupName, status],
       (err, result) => {
         if (err == null || err == undefined) {
           console.log("success");
@@ -48,12 +48,12 @@ async function createGroup(groupName, members, user) {
   console.log(res);
 
   if (res == true) {
-    res = await createUserGroup(user, groupName);
+    res = await createUserGroup(user, groupName, 1);
     console.log(res);
     if (res == true) {
       let result = false;
       for (member of members) {
-        result = await createUserGroup(member, groupName);
+        result = await createUserGroup(member, groupName, 0);
         console.log(result);
 
         if (result) {
@@ -91,7 +91,7 @@ let getMembersAcrossGroups = (stringGroups) => {
     console.log(stringGroups);
 
     con.query(
-      "SELECT distinct user_email from user_group where group_name in" +
+      "SELECT distinct user_email from user_group where invite_status= 1 and group_name in" +
         "  ( " +
         stringGroups +
         " ) ",

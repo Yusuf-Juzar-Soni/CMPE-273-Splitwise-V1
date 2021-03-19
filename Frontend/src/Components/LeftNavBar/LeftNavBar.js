@@ -1,26 +1,31 @@
-// import { React, useState, useEffect } from "react";
-// import axios from "axios";
-// import Navbar from "react-bootstrap/Navbar";
-// import Button from "react-bootstrap/Button";
-// import { useHistory, useLocation } from "react-router-dom";
-// import Nav from "react-bootstrap/esm/Nav";
-// import MyGroupList from "../MyGroupList";
+
 
 import { React, useEffect, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import { ListGroup, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 const queryString = require("query-string");
 import { useLocation } from "react-router-dom";
 import "./LeftNavBar.css";
+import {
+  Button,
+  Grid,
+  Row,
+  Col,
+  ListGroup,
+  Form,
+  Card,
+  Modal,
+} from "react-bootstrap";
 
 function LeftNavBar() {
   const history = useHistory();
   const emailID = useSelector((state) => state.isLogged.email);
-  console.log(emailID);
+
   const [group_names, group_namesChange] = useState([]);
+  const [change, setHandleChange] = useState(false);
+  const [list, setListDisplay] = useState([]);
   const location = useLocation();
   const parsed = queryString.parse(location.search);
   function retriveGroups(user_email1) {
@@ -67,6 +72,21 @@ function LeftNavBar() {
     });
   }
 
+  function redirectToInvites(emailId) {
+    history.push({
+      pathname: "/invitedisplay",
+      search: `?email=${emailId}`,
+    });
+  }
+  const handleSearch = (e, groups) => {
+    setHandleChange(true);
+    console.log(groups);
+    let final_list = groups.filter((names) => {
+      return names.includes(e.target.value);
+    });
+    setListDisplay(final_list);
+  };
+
   useEffect(() => {
     retriveGroups(parsed.email);
   }, [location]);
@@ -74,30 +94,59 @@ function LeftNavBar() {
   return (
     <div>
       <div>
-        <Nav  defaultActiveKey="/home" className="flex-column" color="red">
+        <Nav defaultActiveKey="/home" className="flex-column" color="red">
           <Nav.Link onClick={(event) => redirectToDashboard(parsed.email)}>
             Dashboard
           </Nav.Link>
-          <Nav.Link onClick={(event) => redirectToActivity(parsed.email)}>
+          <Nav.Link
+            data-testid="Activity"
+            onClick={(event) => redirectToActivity(parsed.email)}
+          >
             Activity
           </Nav.Link>
           <Nav.Link>Groups</Nav.Link>
-          <ListGroup className="list-group-design">
-            {group_names.map((item) => (
-              <Button
-                value={item}
-                key={item}
-                variant="link"
-                onClick={(event) =>
-                  redirectToGroup(event.currentTarget.value, parsed.email)
-                }
-              >
-                {item}
-              </Button>
-            ))}
-          </ListGroup>
+          <input
+            type="text"
+            onChange={(e) => handleSearch(e, group_names)}
+          ></input>
+          {change == true && (
+            <ListGroup className="list-group-design">
+              {list.map((item) => (
+                <Button
+                  value={item}
+                  key={item}
+                  variant="link"
+                  onClick={(event) =>
+                    redirectToGroup(event.currentTarget.value, parsed.email)
+                  }
+                >
+                  {item}
+                </Button>
+              ))}
+            </ListGroup>
+          )}
+
+          {change == false && (
+            <ListGroup className="list-group-design">
+              {group_names.map((item) => (
+                <Button
+                  value={item}
+                  key={item}
+                  variant="link"
+                  onClick={(event) =>
+                    redirectToGroup(event.currentTarget.value, parsed.email)
+                  }
+                >
+                  {item}
+                </Button>
+              ))}
+            </ListGroup>
+          )}
           <Nav.Link onClick={(event) => redirectToCreate(parsed.email)}>
             Create Group
+          </Nav.Link>
+          <Nav.Link onClick={(event) => redirectToInvites(parsed.email)}>
+            Invite List
           </Nav.Link>
         </Nav>
       </div>

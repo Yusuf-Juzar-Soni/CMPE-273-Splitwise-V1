@@ -8,6 +8,7 @@ import creategroup from "./CreateGroup";
 import groupsdisplay from "./DisplayGroup";
 import activitydisplay from "./Activity";
 import profile from "./Profile";
+import invitedisplay from "./Invites.js"
 
 const Main = function () {
   return (
@@ -21,6 +22,8 @@ const Main = function () {
       <Route exact path="/groupsdisplay" component={groupsdisplay} />
       <Route exact path="/activitydisplay" component={activitydisplay} />
       <Route exact path="/profile" component={profile} />
+      <Route exact path="/invitedisplay" component={invitedisplay} />
+
     </div>
   );
 };

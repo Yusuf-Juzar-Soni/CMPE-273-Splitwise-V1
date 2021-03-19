@@ -1,21 +1,30 @@
 import React, { useEffect, useState } from "react";
-import bg_image0 from "./assets/login_logo.png";
+
 import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 const queryString = require("query-string");
 import Axios from "axios";
 import TopNavBar from "./TopNavBar";
-import { Button } from "react-bootstrap";
+
 import LeftNavBar from "./LeftNavBar/LeftNavBar";
 import "./Profile.css";
+import {
+  Button,
+  Grid,
+  Row,
+  Col,
+  ListGroup,
+  Form,
+  Card,
+  Modal,
+  Image,
+} from "react-bootstrap";
 
 function Profile() {
   const location = useLocation();
   const parsed = queryString.parse(location.search);
   const email = parsed.email;
   const [user, setUser] = useState([" "]);
-  const [readyForRender, setReadyForRender] = useState(false);
-
   useEffect(() => {
     console.log("useEffect called");
     const getUser = async () => {
@@ -31,7 +40,6 @@ function Profile() {
     };
     getUser();
     console.log(user);
-    setReadyForRender(true);
   }, []);
 
   return (
@@ -47,22 +55,23 @@ function Profile() {
           <div className="row">
             <div className="col-sm-12 .col-md-6 .offset-md-3">
               <center>
-                <h4 style={{ color: "gray", fontSize: 19, marginBottom: 22 }}>
+                <h4
+                  data-testid="Account"
+                  style={{ color: "gray", fontSize: 19, marginBottom: 22 }}
+                >
                   YOUR ACCOUNT
                 </h4>
-
                 <form>
-                  <div className="form-group Login">
-                    <label for="InputUsername">
-                      <b>Username</b>
-                    </label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="InputUsername"
-                      placeholder={user[0].username}
-                    />
-                  </div>
+                  <label for="InputUsername">
+                    <b>Username</b>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="InputUsername"
+                    placeholder={user[0].username}
+                  />
+
                   <div className="form-group Login">
                     <label for="InputEmail">
                       <b>Email</b>
@@ -214,5 +223,4 @@ function Profile() {
     </div>
   );
 }
-
 export default Profile;

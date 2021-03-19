@@ -5,7 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import Nav from "react-bootstrap/esm/Nav";
+import {Nav} from "react-bootstrap";
 import logged from "../actions";
 import bg_image0 from "./assets/login_logo.png";
 import {
@@ -135,7 +135,7 @@ function Login() {
             md={{ span: 5, offset: 3 }}
             controlId="validationCustom03"
           >
-            <Button className="button-settleup" type="submit" onClick={onLogin}>
+            <Button data-testid="Login" className="button-settleup" type="submit" onClick={onLogin}>
               LOGIN
             </Button>
           </Form.Group>

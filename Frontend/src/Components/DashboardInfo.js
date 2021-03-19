@@ -19,7 +19,7 @@ function DashboardInfo() {
   const location = useLocation();
   const parsed = queryString.parse(location.search);
   const email = parsed.email;
-  console.log(email);
+
   const [amounts, setFinalAmounts] = useState([" "]);
   const [owe, setOwe] = useState([]);
   const [owed, setOwed] = useState([]);
@@ -28,23 +28,16 @@ function DashboardInfo() {
   const [dena, setDena] = useState(0);
   const [selectUser, setSelectUser] = useState(" ");
   const [show, setShow] = useState(false);
-  // const [show, setShow] = useState(false);
-  // const [groups, setGroups] = useState([]);
-  // const [amount, setAmount] = useState(0);
-  // const [description, setDescription] = useState("");
-  // const [bills, setBills] = useState([]);
 
   useEffect(() => {
     console.log();
-    // const getFinalAmounts = async () => {
+
     Axios.get("http://localhost:3001/amount/" + email).then((response) => {
       console.log(response);
       setFinalAmounts(response.data);
       setSplit(response.data);
     });
-    // console.log("This is res", res);
 
-    // getFinalAmounts();
     console.log(amounts);
   }, [location]);
 
@@ -106,16 +99,36 @@ function DashboardInfo() {
 
   console.log(selectUser);
 
-  const handleSettleUp = () => {
-    SettleUp(parsed.email, selectUser);
+  const handleSettleUp1 = () => {
+    SettleUp1(parsed.email, selectUser);
+  };
+
+  const handleSettleUp2 = () => {
+    SettleUp2(parsed.email, selectUser);
   };
 
   // const selectedPayee = (e) => {
   //   console.log(e.target.value);
   // };
 
-  const SettleUp = (email, senderemail) => {
-    Axios.post("http://localhost:3001/settleUp", {
+  const SettleUp1 = (email, senderemail) => {
+    Axios.post("http://localhost:3001/settleUpOwe", {
+      user: email,
+      sender: senderemail,
+    })
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data);
+          setShow(false);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const SettleUp2 = (email, senderemail) => {
+    Axios.post("http://localhost:3001/settleUpOwed", {
       user: email,
       sender: senderemail,
     })
@@ -142,8 +155,21 @@ function DashboardInfo() {
       <div className="row">
         <div className="row">
           <div className="col-md-12">
-            <Button className="button-settleup" size="sm" onClick={handleShow}>
-              Settle Up
+            <Button
+              data-testid="Settle Up"
+              className="button-settleup"
+              size="sm"
+              onClick={handleShow}
+            >
+              Settle Up Owe
+            </Button>
+            <Button
+              data-testid="Settle Up"
+              className="button-settleup"
+              size="sm"
+              onClick={handleShow}
+            >
+              Settle Up Owed
             </Button>
             <Button
               className="button-creategroup"
@@ -165,7 +191,9 @@ function DashboardInfo() {
           <Modal.Body>
             <Form>
               <Form.Group>
-                <Form.Label><b>Select Who You Want to Settle Up With :</b></Form.Label>
+                <Form.Label>
+                  <b>Select Who You Want to Settle Up With :</b>
+                </Form.Label>
                 <Form.Control
                   as="select"
                   onChange={(e) => {
@@ -189,7 +217,46 @@ function DashboardInfo() {
               Close
             </Button>
 
-            <Button className="button-settleup" onClick={handleSettleUp}>
+            <Button className="button-settleup" onClick={handleSettleUp1}>
+              SettleUp
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>SettleUp Modal Owed</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group>
+                <Form.Label>
+                  <b>Select Who You Want to Settle Up With :</b>
+                </Form.Label>
+                <Form.Control
+                  as="select"
+                  onChange={(e) => {
+                    setSelectUser(e.target.value);
+                  }}
+                >
+                  <option selected disabled hidden>
+                    choose here
+                  </option>
+                  {owed.map((amount) => (
+                    <option value={amount.email}>
+                      {amount.email} &nbsp;&nbsp; {amount.amt}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button className="button-close" onClick={handleClose}>
+              Close
+            </Button>
+
+            <Button className="button-settleup" onClick={handleSettleUp2}>
               SettleUp
             </Button>
           </Modal.Footer>
@@ -200,9 +267,15 @@ function DashboardInfo() {
         <h4>Welcome to Dashboard</h4>
       </div>
       <div className="row mt-2">
-        <div className="col-md-4"><b>YOU OWE: ${dena}</b></div>
-        <div className="col-md-4"><b>YOU ARE OWED: ${lena}</b></div>
-        <div className="col-md-4"><b>BALANCE: ${bal}</b></div>
+        <div className="col-md-4">
+          <b>YOU OWE: ${dena}</b>
+        </div>
+        <div className="col-md-4">
+          <b>YOU ARE OWED: ${lena}</b>
+        </div>
+        <div className="col-md-4">
+          <b>BALANCE: ${bal}</b>
+        </div>
       </div>
 
       <div className="show-grid">
@@ -217,8 +290,11 @@ function DashboardInfo() {
             </p>
             <ListGroup>
               {owe.map((amt) => (
-                <ListGroup.Item variant="danger" className="links-acttivity-groups">
-                  You owe <b>{amt.email}</b>&nbsp;<b>${amt.amt}</b> 
+                <ListGroup.Item
+                  variant="danger"
+                  className="links-acttivity-groups"
+                >
+                  You owe <b>{amt.email}</b>&nbsp;<b>${amt.amt}</b>
                   <br></br>
                 </ListGroup.Item>
               ))}
@@ -234,8 +310,12 @@ function DashboardInfo() {
             </p>
             <ListGroup>
               {owed.map((amount) => (
-                <ListGroup.Item variant="success" className="links-acttivity-groups">
-                  <b>{amount.email}</b> owes you&nbsp;&nbsp; <b>${amount.amt}</b>
+                <ListGroup.Item
+                  variant="success"
+                  className="links-acttivity-groups"
+                >
+                  <b>{amount.email}</b> owes you&nbsp;&nbsp;{" "}
+                  <b>${amount.amt}</b>
                   <br></br>
                 </ListGroup.Item>
               ))}
