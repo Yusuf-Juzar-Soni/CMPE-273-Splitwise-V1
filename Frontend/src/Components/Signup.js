@@ -8,6 +8,7 @@ import "./Signup";
 import logged from "../actions";
 import Navbar from "react-bootstrap/Navbar";
 import bg_image0 from "./assets/login_logo.png";
+import backendServer from "../webConfig";
 import {
   Button,
   Grid,
@@ -48,7 +49,7 @@ function Signup() {
     //axios.defaults.withCredentials = true;
 
     axios
-      .post("http://localhost:3001/signup", {
+      .post(`${backendServer}/signup`, {
         name,
         email,
         password,

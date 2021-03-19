@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
-import LeftNavBar from "./LeftNavBar/LeftNavBar";
-import Navbar from "react-bootstrap/Navbar";
-import bg_image0 from "./assets/login_logo.png";
+
 import { useSelector } from "react-redux";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Dropdown from "react-bootstrap/Dropdown";
-import Select from "react-select";
+
 import { useHistory, useLocation } from "react-router-dom";
 const queryString = require("query-string");
 import Axios from "axios";
 import TopNavBar from "./TopNavBar";
 import "./DisplayGroup.css";
+import backendServer from "../webConfig";
 import {
   Nav,
   Row,
@@ -53,7 +50,7 @@ function DisplayGroup() {
   };
 
   const AddBill = (email, group, membercount) => {
-    Axios.post("http://localhost:3001/addBill", {
+    Axios.post(`${backendServer}/addBill`, {
       user: email,
       billData: description,
       amount: amount,
@@ -76,7 +73,7 @@ function DisplayGroup() {
 
   function fetchBills(group) {
     return new Promise((resolve, reject) => {
-      Axios.get("http://localhost:3001/fetchBills/" + group)
+      Axios.get(`${backendServer}/fetchBills/` + group)
         .then((response) => {
           console.log(response.data);
           resolve(response.data);
@@ -90,7 +87,7 @@ function DisplayGroup() {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    Axios.post("http://localhost:3001/allMembers", {
+    Axios.post(`${backendServer}/allMembers`, {
       groupname: groupName,
       email: email,
     })

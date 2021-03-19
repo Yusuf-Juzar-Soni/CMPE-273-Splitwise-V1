@@ -2,10 +2,10 @@ import { React, useState } from "react";
 import axios from "axios";
 import alert from "alert";
 import Navbar from "react-bootstrap/Navbar";
-
+import backendServer from "../webConfig";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {Nav} from "react-bootstrap";
+import { Nav } from "react-bootstrap";
 import logged from "../actions";
 import bg_image0 from "./assets/login_logo.png";
 import {
@@ -45,7 +45,7 @@ function Login() {
     console.log("inside function");
     setValidated(true);
     axios
-      .post("http://localhost:3001/login", {
+      .post(`${backendServer}/login`, {
         email,
         password,
       })
@@ -135,7 +135,12 @@ function Login() {
             md={{ span: 5, offset: 3 }}
             controlId="validationCustom03"
           >
-            <Button data-testid="Login" className="button-settleup" type="submit" onClick={onLogin}>
+            <Button
+              data-testid="Login"
+              className="button-settleup"
+              type="submit"
+              onClick={onLogin}
+            >
               LOGIN
             </Button>
           </Form.Group>

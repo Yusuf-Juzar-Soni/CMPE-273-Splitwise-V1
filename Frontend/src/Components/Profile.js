@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import backendServer from "../webConfig";
 import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 const queryString = require("query-string");
@@ -29,7 +29,7 @@ function Profile() {
     console.log("useEffect called");
     const getUser = async () => {
       try {
-        const res = await Axios.post("http://localhost:3001/userdetails", {
+        const res = await Axios.post(`${backendServer}/userdetails`, {
           email: email,
         });
         console.log(res.data);

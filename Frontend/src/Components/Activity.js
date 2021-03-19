@@ -22,6 +22,7 @@ import {
   Modal,
   Form,
 } from "react-bootstrap";
+import backendServer from "../webConfig";
 
 const Activity = () => {
   const location = useLocation();
@@ -31,7 +32,7 @@ const Activity = () => {
   const email = parsed.email;
 
   useEffect(() => {
-    Axios.get("http://localhost:3001/Activity/" + email)
+    Axios.get(`${backendServer}/Activity/` + email)
       .then((response) => {
         console.log(response);
         setActivity(response.data);

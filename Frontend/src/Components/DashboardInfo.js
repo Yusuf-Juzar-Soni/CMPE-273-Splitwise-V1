@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 const queryString = require("query-string");
 import Axios from "axios";
 import { useHistory, useLocation } from "react-router-dom";
+import backendServer from "../webConfig";
 import {
   Button,
   Grid,
@@ -112,7 +113,7 @@ function DashboardInfo() {
   // };
 
   const SettleUp1 = (email, senderemail) => {
-    Axios.post("http://localhost:3001/settleUpOwe", {
+    Axios.post(`${backendServer}/settleUpOwe`, {
       user: email,
       sender: senderemail,
     })
@@ -128,7 +129,7 @@ function DashboardInfo() {
   };
 
   const SettleUp2 = (email, senderemail) => {
-    Axios.post("http://localhost:3001/settleUpOwed", {
+    Axios.post(`${backendServer}/settleUpOwed`, {
       user: email,
       sender: senderemail,
     })

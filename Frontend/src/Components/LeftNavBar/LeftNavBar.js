@@ -1,5 +1,3 @@
-
-
 import { React, useEffect, useState } from "react";
 import Nav from "react-bootstrap/Nav";
 import axios from "axios";
@@ -18,6 +16,7 @@ import {
   Card,
   Modal,
 } from "react-bootstrap";
+import backendServer from "../../webConfig";
 
 function LeftNavBar() {
   const history = useHistory();
@@ -31,7 +30,7 @@ function LeftNavBar() {
   function retriveGroups(user_email1) {
     const user_email = { email: user_email1 };
     axios
-      .post("http://localhost:3001/dashboard", user_email)
+      .post(`${backendServer}/dashboard`, user_email)
       .then((response) => {
         console.log(response.data);
         group_namesChange(response.data);

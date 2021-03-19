@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from "react";
 import LeftNavBar from "./LeftNavBar/LeftNavBar";
-import Navbar from "react-bootstrap/Navbar";
-import bg_image0 from "./assets/login_logo.png";
-import Nav from "react-bootstrap/Nav";
 import { useSelector } from "react-redux";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Dropdown from "react-bootstrap/Dropdown";
-import Select from "react-select";
 import { useHistory, useLocation } from "react-router-dom";
 const queryString = require("query-string");
 import Axios from "axios";
 import TopNavBar from "./TopNavBar";
+import backendServer from "../webConfig";
 import {
   Button,
   Grid,
@@ -48,16 +43,14 @@ function Invites() {
 
   useEffect(() => {
     function getInviteList() {
-      Axios.get("http://localhost:3001/getInvites/" + email).then(
-        (response) => {
-          console.log(response.data.group_list.length);
-          if (response.data.group_list.length === 0) {
-            console.log("NO INVITES");
-            SetInviteMessage("NO INVITATIONS");
-          }
-          SetInviteList(response.data.group_list);
+      Axios.get(`${backendServer}/getInvites/` + email).then((response) => {
+        console.log(response.data.group_list.length);
+        if (response.data.group_list.length === 0) {
+          console.log("NO INVITES");
+          SetInviteMessage("NO INVITATIONS");
         }
-      );
+        SetInviteList(response.data.group_list);
+      });
     }
     getInviteList();
   }, [location]);
@@ -70,7 +63,7 @@ function Invites() {
     e.preventDefault();
 
     console.log("hello");
-    Axios.post("http://localhost:3001/acceptInvite", {
+    Axios.post(`${backendServer}/acceptInvite`, {
       user: email,
       selectedgroup: selectedgroup,
     }).then((response) => {

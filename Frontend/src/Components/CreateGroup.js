@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 const queryString = require("query-string");
 import Axios from "axios";
 import TopNavBar from "./TopNavBar";
+import backendServer from "../webConfig";
 import {
   Button,
   Grid,
@@ -39,7 +40,7 @@ function CreateGroup() {
 
   useEffect(() => {
     console.log(email.email);
-    Axios.get("http://localhost:3001/allUsers/" + email.email)
+    Axios.get(`${backendServer}/allUsers/` + email.email)
       .then((response) => {
         console.log(response);
         let data = [];
