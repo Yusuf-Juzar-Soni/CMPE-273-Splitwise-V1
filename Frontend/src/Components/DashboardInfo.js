@@ -29,6 +29,8 @@ function DashboardInfo() {
   const [dena, setDena] = useState(0);
   const [selectUser, setSelectUser] = useState(" ");
   const [show, setShow] = useState(false);
+  const [show1, setShow1] = useState(false);
+  const [selectUser1, setSelectUser1] = useState(" ");
 
   useEffect(() => {
     console.log();
@@ -58,6 +60,7 @@ function DashboardInfo() {
 
     setOwe(negative_final);
     setOwed(positive);
+    console.log("Owe array", owe);
 
     findAmounts(negative_final, positive);
   };
@@ -94,28 +97,36 @@ function DashboardInfo() {
 
   const handleShow = () => setShow(true);
 
+  const handleShow1 = () => setShow1(true);
+
   const handleClose = () => {
     setShow(false);
   };
 
+  const handleClose1 = () => {
+    setShow1(false);
+  };
+
   console.log(selectUser);
+  console.log(selectUser1);
 
   const handleSettleUp1 = () => {
-    SettleUp1(parsed.email, selectUser);
+    SettleUp1(parsed.email, selectUser, owe.amt);
   };
 
   const handleSettleUp2 = () => {
-    SettleUp2(parsed.email, selectUser);
+    SettleUp2(parsed.email, selectUser1);
   };
 
   // const selectedPayee = (e) => {
   //   console.log(e.target.value);
   // };
 
-  const SettleUp1 = (email, senderemail) => {
+  const SettleUp1 = (email, senderemail, amount) => {
     Axios.post(`${backendServer}/settleUpOwe`, {
       user: email,
       sender: senderemail,
+      amt: amount,
     })
       .then((response) => {
         if (response.status == 200) {
@@ -136,7 +147,7 @@ function DashboardInfo() {
       .then((response) => {
         if (response.status == 200) {
           console.log(response.data);
-          setShow(false);
+          setShow1(false);
         }
       })
       .catch((e) => {
@@ -168,7 +179,7 @@ function DashboardInfo() {
               data-testid="Settle Up"
               className="button-settleup"
               size="sm"
-              onClick={handleShow}
+              onClick={handleShow1}
             >
               Settle Up Owed
             </Button>
@@ -224,7 +235,7 @@ function DashboardInfo() {
           </Modal.Footer>
         </Modal>
 
-        <Modal show={show} onHide={handleClose}>
+        <Modal show={show1} onHide={handleClose1}>
           <Modal.Header closeButton>
             <Modal.Title>SettleUp Modal Owed</Modal.Title>
           </Modal.Header>
@@ -237,7 +248,7 @@ function DashboardInfo() {
                 <Form.Control
                   as="select"
                   onChange={(e) => {
-                    setSelectUser(e.target.value);
+                    setSelectUser1(e.target.value);
                   }}
                 >
                   <option selected disabled hidden>
@@ -253,12 +264,12 @@ function DashboardInfo() {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button className="button-close" onClick={handleClose}>
+            <Button className="button-close" onClick={handleClose1}>
               Close
             </Button>
 
             <Button className="button-settleup" onClick={handleSettleUp2}>
-              SettleUp
+              SettleUp Owed
             </Button>
           </Modal.Footer>
         </Modal>

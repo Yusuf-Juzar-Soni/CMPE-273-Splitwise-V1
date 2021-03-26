@@ -44,6 +44,7 @@ let createGroups = (groupName) => {
 };
 
 async function createGroup(groupName, members, user) {
+  console.log( "Members dispalyed Here",members);
   let res = await createGroups(groupName);
   console.log(res);
 
@@ -58,12 +59,13 @@ async function createGroup(groupName, members, user) {
 
         if (result) {
           console.log("operation success (complete operation)");
-          return true;
+        
         } else {
           console.log("operation failed (commplete operation)");
           return false;
         }
       }
+      return true;
     } else {
       return res;
     }

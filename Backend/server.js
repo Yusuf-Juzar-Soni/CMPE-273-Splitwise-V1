@@ -28,19 +28,28 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-const con = mysql.createConnection({
-  host: "splitwisedb.ca0vnrrcatej.us-east-2.rds.amazonaws.com", // ip address of server running mysql
-  user: "admin", //user name to your my sql server
+const con = mysql.createPool({
+  connectionLimit: 10,
+  host: "splitwisedb.ca0vnrrcatej.us-east-2.rds.amazonaws.com",
+  user: "admin",
   password: "test1234",
+  ssl: true,
   database: "splitwise_db",
 });
 
-con.connect((err) => {
-  if (err) {
-    console.log(err);
-  }
-  console.log("Connected!");
-});
+// const con = mysql.createConnection({
+//   host: "splitwisedb.ca0vnrrcatej.us-east-2.rds.amazonaws.com", // ip address of server running mysql
+//   user: "admin", //user name to your my sql server
+//   password: "test1234",
+//   database: "splitwise_db",
+// });
+
+// con.connect((err) => {
+//   if (err) {
+//     console.log(err);
+//   }
+//   console.log("Connected!");
+// });
 
 //Allow Access Control
 
@@ -323,10 +332,11 @@ app.get("/amount/:user", (req, res) => {
 app.post("/settleUpOwe", (req, res) => {
   console.log("user", req.body.user);
   console.log("sender", req.body.sender);
+  console.log("amount", req.body.amt);
 
   con.query(
-    "UPDATE transaction_table SET transaction_amount = 0 WHERE sender=? AND receiver=?",
-    [req.body.sender, req.body.user],
+    "INSERT INTO transaction_table (sender, receiver, transaction_amount,bill_group) VALUES (?,?,?,?)",
+    [req.body.sender, req.body.user,req.body.amt,"Group 0"],
     (err, result) => {
       if (!err) {
         res.status(200).send(result);
@@ -343,7 +353,7 @@ app.post("/settleUpOwed", (req, res) => {
 
   con.query(
     "UPDATE transaction_table SET transaction_amount = 0 WHERE sender=? AND receiver=?",
-    [req.body.user,req.body.sender],
+    [req.body.user, req.body.sender],
     (err, result) => {
       if (!err) {
         res.status(200).send(result);
