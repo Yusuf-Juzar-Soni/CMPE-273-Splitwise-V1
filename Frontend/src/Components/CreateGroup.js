@@ -84,7 +84,7 @@ function CreateGroup() {
     let finalMembers = [];
     finalMembers = members.map((member) => member.value);
 
-    Axios.post("http://localhost:3001/createGroup", {
+    Axios.post(`${backendServer}/createGroup`, {
       groupName: group,
       user: emailId,
       members: finalMembers,

@@ -36,7 +36,7 @@ function DashboardInfo() {
   useEffect(() => {
     console.log();
 
-    Axios.get("http://localhost:3001/amount/" + email).then((response) => {
+    Axios.get(`${backendServer}/amount/` + email).then((response) => {
       console.log(response);
       setFinalAmounts(response.data);
       setSplit(response.data);
