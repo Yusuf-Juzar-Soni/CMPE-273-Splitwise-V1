@@ -1,4 +1,4 @@
-import { React } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import "./Dashboard.css";
 import LeftNavBar from "../LeftNavBar/LeftNavBar";
@@ -6,6 +6,7 @@ import TopNavBar from "../TopNavBar";
 import DashboardInfo from "../DashboardInfo";
 
 const Dashboard = function () {
+  
   const isLogged = useSelector((state) => state.isLogged.username);
   console.log("hello");
   return (

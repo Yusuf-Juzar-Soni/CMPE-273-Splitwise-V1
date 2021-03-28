@@ -44,30 +44,38 @@ function Login() {
     e.preventDefault();
     console.log("inside function");
     setValidated(true);
-    axios
-      .post(`${backendServer}/login`, {
-        email,
-        password,
-      })
-      .then((response) => {
-        console.log(response.data.result[0]);
-        console.log(response.data.result[0].username);
-        console.log(response.data.result[0].user_email);
-        loadSuccessful();
-        handleClick(response.data.result[0].user_email);
-        dispatch(
-          logged(
-            response.data.result[0].username,
-            response.data.result[0].user_email
-          )
-        );
-      })
-      .catch((err) => {
-        if (err.response) {
-          alert(err.response.data.message);
-        }
-      });
+    if (email.includes("@") && email.includes(".com")) {
+      axios
+        .post(`${backendServer}/login`, {
+          email,
+          password,
+        })
+        .then((response) => {
+          localStorage.setItem("username", response.data.result[0].username);
+          localStorage.setItem("useremail", response.data.result[0].user_email);
+          console.log(response.data.result[0]);
+          console.log(response.data.result[0].username);
+          console.log(response.data.result[0].user_email);
+          loadSuccessful();
+          handleClick(response.data.result[0].user_email);
+          dispatch(
+            logged(
+              response.data.result[0].username,
+              response.data.result[0].user_email
+            )
+          );
+        })
+        .catch((err) => {
+          if (err.response) {
+            alert(err.response.data.message);
+          }
+        });
+    }
+    else{
+      alert("Email format wrong")
+    }
   };
+
   return (
     <div>
       <Navbar bg="success" expand="lg">

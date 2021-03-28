@@ -39,7 +39,12 @@ function DisplayGroup() {
   const [description, setDescription] = useState("");
   const [bills, setBills] = useState([]);
   const no_of_members = member_names.length;
-  console.log(no_of_members);
+  console.log("No.of Members", no_of_members);
+
+  const owe = parseInt(localStorage.getItem("IOweAmount"));
+  const owed = parseInt(localStorage.getItem("OwedAmount"));
+  console.log("On display page", owe);
+  console.log("On display Page", owed);
 
   const handleClose = () => {
     setShow(false);
@@ -84,6 +89,32 @@ function DisplayGroup() {
     });
   }
 
+  const handleLeaveGroup = () => {
+    console.log("inside caller function", owe);
+    console.log("inside caller function 1", owed);
+    if (owe === 0 && owed === 0) {
+      console.log("inside caller if");
+      LeaveGroup(parsed.email, groupName);
+    } else {
+      console.log("cannot leave group, please clear dues");
+    }
+  };
+
+  const LeaveGroup = (u_email, groupname) => {
+    Axios.post(`${backendServer}/leaveGroup`, {
+      user: u_email,
+      group: groupname,
+    })
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   const handleShow = () => setShow(true);
 
   useEffect(() => {
@@ -121,7 +152,17 @@ function DisplayGroup() {
           </div>
           <div className="col-md-1">
             <Button className="button-addBillPrimary" onClick={handleShow}>
-              Add Bill
+              Add Bill Display Page
+            </Button>
+          </div>
+          <div className="col-md-1">
+            <Button
+              className="button-close"
+              onClick={() => {
+                handleLeaveGroup();
+              }}
+            >
+              Leave Group
             </Button>
           </div>
         </div>

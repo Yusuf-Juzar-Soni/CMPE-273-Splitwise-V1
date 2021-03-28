@@ -27,10 +27,11 @@ function DashboardInfo() {
   const [bal, setBal] = useState(0);
   const [lena, setLena] = useState(0);
   const [dena, setDena] = useState(0);
-  const [selectUser, setSelectUser] = useState(" ");
+  const [selectUser, setSelectUser] = useState({});
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
-  const [selectUser1, setSelectUser1] = useState(" ");
+  const [selectUser1, setSelectUser1] = useState([]);
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
     console.log();
@@ -93,9 +94,13 @@ function DashboardInfo() {
     setDena(IOwe);
     setLena(Owed);
     setBal(balanced);
+    localStorage.setItem("IOweAmount", IOwe);
+    localStorage.setItem("OwedAmount", Owed);
   };
 
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    setShow(true);
+  };
 
   const handleShow1 = () => setShow1(true);
 
@@ -107,15 +112,15 @@ function DashboardInfo() {
     setShow1(false);
   };
 
-  console.log(selectUser);
-  console.log(selectUser1);
+  //console.log(selectUser1);
 
-  const handleSettleUp1 = () => {
-    SettleUp1(parsed.email, selectUser, owe.amt);
+  const handleSettleUp1 = (selectUser) => {
+    console.log(selectUser.amt);
+    SettleUp1(parsed.email, selectUser.email, selectUser.amt);
   };
 
-  const handleSettleUp2 = () => {
-    SettleUp2(parsed.email, selectUser1);
+  const handleSettleUp2 = (selectUser1) => {
+    SettleUp2(parsed.email, selectUser1.email, selectUser1.amt);
   };
 
   // const selectedPayee = (e) => {
@@ -139,10 +144,11 @@ function DashboardInfo() {
       });
   };
 
-  const SettleUp2 = (email, senderemail) => {
+  const SettleUp2 = (email, senderemail, amount) => {
     Axios.post(`${backendServer}/settleUpOwed`, {
       user: email,
       sender: senderemail,
+      amount: amount,
     })
       .then((response) => {
         if (response.status == 200) {
@@ -161,6 +167,16 @@ function DashboardInfo() {
       search: `?email=${emailId}`,
     });
   }
+
+  const setSelectChange = (e) => {
+    setSelectUser(JSON.parse(e.target.value));
+    console.log(selectUser);
+  };
+
+  const setSelectChangeOwed = (e) => {
+    setSelectUser1(JSON.parse(e.target.value));
+    console.log(selectUser1);
+  };
 
   return (
     <div>
@@ -209,14 +225,14 @@ function DashboardInfo() {
                 <Form.Control
                   as="select"
                   onChange={(e) => {
-                    setSelectUser(e.target.value);
+                    setSelectChange(e);
                   }}
                 >
                   <option selected disabled hidden>
                     choose here
                   </option>
                   {owe.map((amount) => (
-                    <option value={amount.email}>
+                    <option value={JSON.stringify(amount)}>
                       {amount.email} &nbsp;&nbsp; {amount.amt}
                     </option>
                   ))}
@@ -229,12 +245,17 @@ function DashboardInfo() {
               Close
             </Button>
 
-            <Button className="button-settleup" onClick={handleSettleUp1}>
+            <Button
+              className="button-settleup"
+              onClick={() => {
+                handleSettleUp1(selectUser);
+              }}
+            >
               SettleUp
             </Button>
           </Modal.Footer>
         </Modal>
-
+        {/* ------------------------------------------------------------------------------------------ */}
         <Modal show={show1} onHide={handleClose1}>
           <Modal.Header closeButton>
             <Modal.Title>SettleUp Modal Owed</Modal.Title>
@@ -248,14 +269,14 @@ function DashboardInfo() {
                 <Form.Control
                   as="select"
                   onChange={(e) => {
-                    setSelectUser1(e.target.value);
+                    setSelectChangeOwed(e);
                   }}
                 >
                   <option selected disabled hidden>
                     choose here
                   </option>
                   {owed.map((amount) => (
-                    <option value={amount.email}>
+                    <option value={JSON.stringify(amount)}>
                       {amount.email} &nbsp;&nbsp; {amount.amt}
                     </option>
                   ))}
@@ -268,7 +289,12 @@ function DashboardInfo() {
               Close
             </Button>
 
-            <Button className="button-settleup" onClick={handleSettleUp2}>
+            <Button
+              className="button-settleup"
+              onClick={() => {
+                handleSettleUp2(selectUser1);
+              }}
+            >
               SettleUp Owed
             </Button>
           </Modal.Footer>
@@ -276,7 +302,7 @@ function DashboardInfo() {
       </div>
       <div class="row justify-content-center">
         <title>Welcome to Dashboard</title>
-        <h4>Welcome to Dashboard</h4>
+        <h4>Welcome to {username}'s Dashboard</h4>
       </div>
       <div className="row mt-2">
         <div className="col-md-4">

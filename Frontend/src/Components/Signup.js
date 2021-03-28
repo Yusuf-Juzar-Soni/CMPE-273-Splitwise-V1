@@ -45,28 +45,35 @@ function Signup() {
   const onSignup = (e) => {
     e.preventDefault();
     setValidated(true);
-
-    //axios.defaults.withCredentials = true;
-
-    axios
-      .post(`${backendServer}/signup`, {
-        name,
-        email,
-        password,
-      })
-      .then((response) => {
-        console.log(response);
-        console.log(isLogged);
-        loadSuccessful();
-        handleClick(response.data.email);
-        dispatch(logged(response.data.name, response.data.email));
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response);
-          setAlert(err.response.data.message);
-        }
-      });
+    if (email === "" || password === "") {
+      setAlert("Please fill information completely");
+    } else {
+      if (email.includes("@") && email.includes(".com")) {
+        axios
+          .post(`${backendServer}/signup`, {
+            name,
+            email,
+            password,
+          })
+          .then((response) => {
+            console.log(response);
+            console.log(isLogged);
+            loadSuccessful();
+            handleClick(response.data.email);
+            dispatch(logged(response.data.name, response.data.email));
+            localStorage.setItem("username", response.data.name);
+            localStorage.setItem("useremail", response.data.email);
+          })
+          .catch((err) => {
+            if (err.response) {
+              console.log(err.response);
+              setAlert(err.response.data.message);
+            }
+          });
+      } else {
+        alert("Email format wrong");
+      }
+    }
   };
   return (
     <div>

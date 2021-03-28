@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 const queryString = require("query-string");
 import { useLocation } from "react-router-dom";
 import bg_image0 from "./assets/login_logo.png";
-import './TopNavBar.css'
+import "./TopNavBar.css";
 
 function TopNavBar() {
   const history = useHistory();
@@ -22,6 +22,13 @@ function TopNavBar() {
       search: `?email=` + emailId,
     });
   }
+
+  function redirectToLogin() {
+    localStorage.clear();
+    history.push({
+      pathname: "/login",
+    });
+  }
   return (
     <div>
       <Navbar bg="success" expand="lg">
@@ -32,14 +39,23 @@ function TopNavBar() {
           <Nav.Link href="#home" />
         </Nav>
         <Dropdown>
-          <Dropdown.Toggle className="dtoggle" variant="info" id="dropdown-basic">
+          <Dropdown.Toggle
+            className="dtoggle"
+            variant="info"
+            id="dropdown-basic"
+          >
             {isLogged}
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item className="ditem" onClick={(event) => redirectToProfile(parsed.email)}>
+            <Dropdown.Item
+              className="ditem"
+              onClick={(event) => redirectToProfile(parsed.email)}
+            >
               Profile
             </Dropdown.Item>
-            <Dropdown.Item href="/landing">Logout</Dropdown.Item>
+            <Dropdown.Item onClick={(event) => redirectToLogin()}>
+              Logout
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </Navbar>

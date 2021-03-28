@@ -46,8 +46,7 @@ function Invites() {
       Axios.get(`${backendServer}/getInvites/` + email).then((response) => {
         console.log(response.data.group_list.length);
         if (response.data.group_list.length === 0) {
-          console.log("NO INVITES");
-          SetInviteMessage("NO INVITATIONS");
+          SetInviteMessage("No Invitations at the moment !!!");
         }
         SetInviteList(response.data.group_list);
       });
@@ -85,13 +84,13 @@ function Invites() {
           </div>
           <div div className="col-md-10">
             <div class="container">
-              <h3>YOU ARE INVITED TO FOLLOWING GROUPS</h3>
+              <h4>Invites List</h4>
               {inviteMessage}
               {inviteList.map((item) => (
                 <div>
                   <Button
+                    className="button-close"
                     onClick={(e) => handleShow(e.currentTarget.value)}
-                    variant="warning"
                     value={item}
                     key={item}
                   >
@@ -101,20 +100,20 @@ function Invites() {
 
                   <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
-                      <Modal.Title>INVITATION</Modal.Title>
+                      <Modal.Title>Group Invite</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                      Accept the invite to this group
+                      Accept Invite to{" "}
                       {localStorage.getItem("selectedGroupName")}
                     </Modal.Body>
                     <Modal.Footer>
                       <Button
-                        variant="primary"
+                        className="button-settleup"
                         value={item}
                         type="submit"
                         onClick={(e) => handleAccept(e)}
                       >
-                        ACCEPT
+                        Accept
                       </Button>
                     </Modal.Footer>
                   </Modal>

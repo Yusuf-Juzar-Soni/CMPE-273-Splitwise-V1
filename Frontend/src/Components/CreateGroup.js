@@ -9,9 +9,11 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Select from "react-select";
 import { useHistory } from "react-router-dom";
 const queryString = require("query-string");
+import alert from "alert";
 import Axios from "axios";
 import TopNavBar from "./TopNavBar";
 import backendServer from "../webConfig";
+
 import {
   Button,
   Grid,
@@ -21,6 +23,7 @@ import {
   Form,
   Card,
   Modal,
+  Alert,
 } from "react-bootstrap";
 import "./CreateGroup.css";
 
@@ -29,16 +32,18 @@ function CreateGroup() {
   const history = useHistory();
   const parsed = queryString.parse(location.search);
   let email = parsed;
-  const [form, setForm] = useState([]);
+
   const [group, setGroup] = useState("");
   const [flag, setFlag] = useState(false);
   const [user, setUsers] = useState([]);
   const [members, setMembers] = useState([]);
   const [alert, setAlert] = useState([]);
-  const [count, setCount] = useState(0);
+  const [success, setSuccess] = useState("");
   const [emailId, setEmail] = useState([email.email]);
+  const isEnabled = group.length > 0;
 
   useEffect(() => {
+    console.log(flag);
     console.log(email.email);
     Axios.get(`${backendServer}/allUsers/` + email.email)
       .then((response) => {
@@ -75,6 +80,7 @@ function CreateGroup() {
   const onSubmit = (e) => {
     e.preventDefault();
     console.log(members);
+
     let finalMembers = [];
     finalMembers = members.map((member) => member.value);
 
@@ -86,14 +92,14 @@ function CreateGroup() {
       .then((response) => {
         console.log(response);
         // setUsers(response.data);
+        setSuccess("Group Created");
       })
       .catch((e) => {
         if (e.response && e.response.data) {
           console.log(e.response.data.message); // some reason error message
-          setAlert(e.response.data.message);
+          setAlert("Group already Exist");
         }
       });
-    dashboard();
   };
 
   const onChange = (opt) => {
@@ -123,13 +129,15 @@ function CreateGroup() {
                   </center>
                 </div>
                 <form>
-                  <div className="form-group inputLogin">
+                  <div>
                     <label for="groupName">
                       <b>Group Name</b>
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className={
+                        flag ? "form-control  is-invalid" : "form-control"
+                      }
                       id="groupName"
                       aria-describedby="emailHelp"
                       placeholder="Enter Group Name"
@@ -137,8 +145,11 @@ function CreateGroup() {
                         setGroup(e.target.value);
                       }}
                     />
+                    {flag && (
+                      <div className="invalid-feedback">Group is required</div>
+                    )}
                   </div>
-                  <div className="form-group inputLogin">
+                  <div>
                     <label for="emailOfGroupMembers">
                       <b>Email ID of group members</b>
                     </label>
@@ -148,10 +159,16 @@ function CreateGroup() {
                       isMulti
                     />
                   </div>
-                  <Button className="button-create" onClick={onSubmit}>
+                  <Button
+                    disabled={!isEnabled}
+                    className="button-create"
+                    onClick={onSubmit}
+                  >
                     Create a group
                   </Button>
                 </form>
+                <h4>{alert}</h4>
+                <h4>{success}</h4>
               </div>
             </div>
           </div>

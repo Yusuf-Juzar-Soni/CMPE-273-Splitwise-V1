@@ -14,6 +14,7 @@ const upload = multer();
 const pipeline = util.promisify(require("stream").pipeline);
 app.use(express.static(__dirname + "/public"));
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+const bcrypt = require("bcryptjs");
 
 app.use(
   session({
@@ -62,10 +63,12 @@ app.post("/signup", function (req, res) {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
+  const salt = bcrypt.genSaltSync(10);
+  const encryptedpassword = bcrypt.hashSync(password, salt);
 
   con.query(
     "INSERT INTO users (username, user_email, password) VALUES (?,?,?)",
-    [name, email, password],
+    [name, email, encryptedpassword],
     (err, result) => {
       if (err) {
         if (err.code === "ER_DUP_ENTRY") {
@@ -83,24 +86,34 @@ app.post("/signup", function (req, res) {
 
 app.post("/login", function (req, res) {
   const email = req.body.email;
-  const password = req.body.password;
+  console.log(req.body.password)
 
   con.query(
-    "SELECT * FROM  users WHERE user_email=? AND password=?",
-    [email, password],
+    "SELECT * FROM  users WHERE user_email=?",
+    [email],
     (err, result) => {
       if (result) {
         if (result.length) {
-          let user = {
-            username: req.body.email,
-            password: req.body.password,
-          };
-          user = { username: req.body.email, password: req.body.password };
-          req.session.user = user;
-          console.log(result);
-          res.status(200).json({ result });
-
-          res.end("Successful Login");
+          bcrypt.compare(
+            req.body.password,
+            result[0].password,
+            (err, results) => {
+              console.log(result[0].password);
+              console.log(results);
+              if (results) {
+                user = {
+                  username: req.body.email,
+                  password: req.body.password,
+                };
+                req.session.user = user;
+                console.log(results);
+                res.status(200).json({ result });
+                res.end("Successful Login");
+              } else {
+                res.status(404).json({ message: "Invalid Password!" });
+              }
+            }
+          );
         } else if (result.length === 0) {
           res.status(404).json({ message: "Invalid credentials!" });
         }
@@ -143,8 +156,8 @@ app.post("/allMembers", (req, res) => {
   console.log(req.body.email);
   console.log(req.body.groupname);
   con.query(
-    "select user_email from user_group where user_email !=? and group_name = ? and invite_status= 1",
-    [req.body.email, req.body.groupname],
+    "select user_email from user_group where group_name = ? and invite_status= 1",
+    [req.body.groupname],
     (err, result) => {
       if (!err) {
         res.status(200).send(result);
@@ -336,7 +349,7 @@ app.post("/settleUpOwe", (req, res) => {
 
   con.query(
     "INSERT INTO transaction_table (sender, receiver, transaction_amount,bill_group) VALUES (?,?,?,?)",
-    [req.body.sender, req.body.user,req.body.amt,"Group 0"],
+    [req.body.user, req.body.sender, req.body.amt, "Group 0"],
     (err, result) => {
       if (!err) {
         res.status(200).send(result);
@@ -350,10 +363,11 @@ app.post("/settleUpOwe", (req, res) => {
 app.post("/settleUpOwed", (req, res) => {
   console.log("user", req.body.user);
   console.log("sender", req.body.sender);
+  console.log("amount owed:", req.body.amount);
 
   con.query(
-    "UPDATE transaction_table SET transaction_amount = 0 WHERE sender=? AND receiver=?",
-    [req.body.user, req.body.sender],
+    "INSERT INTO transaction_table (sender, receiver, transaction_amount,bill_group) VALUES (?,?,?,?)",
+    [req.body.sender, req.body.user, req.body.amount, "Group 0"],
     (err, result) => {
       if (!err) {
         res.status(200).send(result);
@@ -394,6 +408,24 @@ app.post("/acceptInvite", (req, res) => {
   con.query(
     "UPDATE user_group SET invite_status = 1 where group_name= ? and user_email = ?",
     [req.body.selectedgroup, req.body.user],
+    (err, result) => {
+      if (!err) {
+        res.status(200).json({ message: "success" });
+      } else {
+        res.status(400).json({ error: "an error occured" });
+      }
+    }
+  );
+});
+
+app.post("/leaveGroup", (req, res) => {
+  console.log("inside Leave group", req.body.user);
+  console.log(req.body.group);
+
+  console.log("inside leave group ");
+  con.query(
+    "UPDATE user_group SET invite_status = 2 where group_name= ? and user_email = ?",
+    [req.body.group, req.body.user],
     (err, result) => {
       if (!err) {
         res.status(200).json({ message: "success" });
