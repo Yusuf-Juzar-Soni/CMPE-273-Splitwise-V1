@@ -1,4 +1,4 @@
-# CMPE-273-Splitwise
+# CMPE-273-Splitwise-V1
 Clone the repository to your machine.
 * Go into the Backend folder and run command npm install
 * After installation completes run command node server.js
