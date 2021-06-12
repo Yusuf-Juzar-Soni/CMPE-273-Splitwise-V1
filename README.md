@@ -1,4 +1,7 @@
 # CMPE-273-Splitwise-V1
+<p align="center">  
+  <img  align="center" src="https://github.com/SaiNikhilYandamuri/simulation-of-reddit/blob/main/client/src/components/resources/redditImage.PNG">
+</p>
 Clone the repository to your machine.
 * Go into the Backend folder and run command npm install
 * After installation completes run command node server.js
