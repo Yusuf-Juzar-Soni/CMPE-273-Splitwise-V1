@@ -40,40 +40,28 @@ We have simulated various features present in the original web application like
   <img  align="center" src="https://github.com/Yusuf-Juzar-Soni/CMPE-273-Splitwise-V2/blob/main/Frontend/src/Components/assets/img44.jpg">
 </p>
 <p align="center">  
-  <img  align="center" src="https://github.com/Yusuf-Juzar-Soni/CMPE-273-Splitwise-V1/blob/main/Frontend/src/Components/assets/splitwise_logo.png">
+  <img  align="center" src="https://github.com/Yusuf-Juzar-Soni/CMPE-273-Splitwise-V2/blob/main/Frontend/src/Components/assets/img45.jpg">
+</p>
+<p align="center">  
+  <img  align="center" src="https://github.com/Yusuf-Juzar-Soni/CMPE-273-Splitwise-V2/blob/main/Frontend/src/Components/assets/img46.jpg">
+</p>
+<p align="center">  
+  <img  align="center" src="https://github.com/Yusuf-Juzar-Soni/CMPE-273-Splitwise-V2/blob/main/Frontend/src/Components/assets/img54.jpg">
+</p>
+<p align="center">  
+  <img  align="center" src="https://github.com/Yusuf-Juzar-Soni/CMPE-273-Splitwise-V2/blob/main/Frontend/src/Components/assets/img88.jpg">
+</p>
+<p align="center">  
+  <img  align="center" src="https://github.com/Yusuf-Juzar-Soni/CMPE-273-Splitwise-V2/blob/main/Frontend/src/Components/assets/img89.jpg">
 </p>
 
 
+
 ## Tools used 
- ReactJS, NodeJS, ExpressJS, Mongo DB, MySQL, HTML5, PassportJS, Apache Kafka, Redis Caching
+ ReactJS, NodeJS, ExpressJS,MySQL, HTML5, React Bootstrap etc.
 
 ## Prerequisites
-Before running this locally you must have Node,Apache Kafka (version 2.11),Zookeeper,Redis, MySQL,MongoDB etc.setup. 
-
-## Challenges we ran into
-Tricky to implement Kafka for such a large scale application. Multiple zookepers would be needed to ensure smooth functioning.
-Integration of various modules led to various merge conflicts.
-A larger cloud instance (more then t2. micro capacity) would be needed to ensure a decent reponse time from system.
-
-## Future Scope
-Multiple image upload functionality while creating post
-Ability to create subreddits.
-More granularity in community moderations page.
-
-
-Client folder refers to Front-end of Reddit application.
-
-Server folder refers to Back-end of Reddit application.
-
-Kafka-Server folder refers to Kafka Message Queue related code of Reddit application.
-
-Ports:
-
-Front-end: 3000
-Back-end: 3001
-
-- Instructions to Backend Server can be found in README.md inside ./server folder.
-
+Before running this locally you must have Node, Express,MySQL, etc.setup. 
 Clone the repository to your machine.
 * Go into the Backend folder and run command npm install
 * After installation completes run command node server.js
@@ -82,3 +70,13 @@ Clone the repository to your machine.
 * Go to the Frontend folder and run command npm install
 * After installation completes run command npm start
 * Go to url http://localhost:3000 to view App
+
+## Challenges I  ran into
+* Database design slightly complicated (dependencies needed to be analyzed)
+* Figuring out Settle Up Logic  
+
+
+
+
+
+
