@@ -29,21 +29,24 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-const con = mysql.createPool({
-  connectionLimit: 10,
-  host: "splitwisedb.ca0vnrrcatej.us-east-2.rds.amazonaws.com",
-  user: "admin",
-  password: "test1234",
-  ssl: true,
-  database: "splitwise_db",
-});
-
-// const con = mysql.createConnection({
-//   host: "splitwisedb.ca0vnrrcatej.us-east-2.rds.amazonaws.com", // ip address of server running mysql
-//   user: "admin", //user name to your my sql server
-//   password: "test1234",
+// uncomment to use in case of connection pooling
+// const con = mysql.createPool({
+//   connectionLimit: 10,
+//   host: "",
+//   user: "",
+//   password: "",
+//   ssl: true,
 //   database: "splitwise_db",
 // });
+
+const con = mysql.createConnection({
+  host: "<ip of amazon rds>", // ip address of server running mysql
+  user: "<add username of amazon rds>", //user name to your my sql server
+  password: "<add password of your aws rds instance",// password of your instance
+  database: "splitwise_db",// name of db
+});
+
+
 
 // con.connect((err) => {
 //   if (err) {
@@ -185,21 +188,7 @@ app.post("/addBill", function (req, res) {
 
   billWorkerFunc.BillAdd(amount, billdesc, user, split_amount, group);
 
-  // con.query(
-  //   "INSERT INTO bill_table (bill_amount, bill_desc, created_by,split_amount,bill_group) VALUES (?,?,?,?,?)",
-  //   [amount,billdesc,user,split_amount,group],
-  //   (err, result) => {
-  //     if (err) {
-  //       if (err.code === "ER_DUP_ENTRY") {
-  //         console.log("Bill addition failed");
-  //       }
-  //     } else {
-  //       console.log("Bill Added Successfully" );
-
-  //     }
-
-  //   }
-  // );
+ 
 
   for (member of members) {
     con.query(

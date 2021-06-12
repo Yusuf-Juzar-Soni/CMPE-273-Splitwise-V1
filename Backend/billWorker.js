@@ -1,9 +1,9 @@
 const mysql = require("mysql");
 const con = mysql.createConnection({
-  host: "splitwisedb.ca0vnrrcatej.us-east-2.rds.amazonaws.com", // ip address of server running mysql
-  user: "admin", //user name to your my sql server
-  password: "test1234",
-  database: "splitwise_db",
+  host: "<ip of amazon rds>", // ip address of server running mysql
+  user: "<add username of amazon rds>", //user name to your my sql server
+  password: "<add password of your aws rds instance",// password of your instance
+  database: "splitwise_db",// name of db
 });
 
 let BillAdd = (amount, billdesc, user, split_amount, group) => {
