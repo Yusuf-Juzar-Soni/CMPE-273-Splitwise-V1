@@ -1,6 +1,6 @@
 # CMPE-273-Splitwise-V1
 <p align="center">  
-  <img  align="center" src="https://github.com/SaiNikhilYandamuri/simulation-of-reddit/blob/main/client/src/components/resources/redditImage.PNG">
+  <img  align="center" src="https://github.com/Yusuf-Juzar-Soni/CMPE-273-Splitwise-V1/blob/main/Frontend/src/Components/assets/login_logo.png">
 </p>
 Clone the repository to your machine.
 * Go into the Backend folder and run command npm install
