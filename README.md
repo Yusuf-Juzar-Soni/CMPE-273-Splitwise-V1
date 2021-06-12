@@ -75,6 +75,7 @@ Clone the repository to your machine.
 * Database design slightly complicated (dependencies needed to be analyzed)
 * Figuring out Settle Up Logic  
 
+### For further information kindly read report present in the project folder.
 
 
 
